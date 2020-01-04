@@ -1,0 +1,45 @@
+﻿body {
+}
+
+h1{
+    text-align:center;
+}
+
+#destenationDIV{
+    border: 4px solid darkblue;
+    margin-left:10%;
+    margin-right:10%;
+}
+
+#dateDIV {
+    border: 4px solid darkblue;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top:3%;
+}
+
+#frame {
+    border:5px solid black;
+}
+
+#btnSearchDiv {
+    margin-top:1%;
+    margin-left:10%;
+    margin-right:10%;
+    margin-bottom:1%;
+}
+
+#btnMyflightDiv {
+    margin-top: 1%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 1%;
+}
+#MyflightBTN{
+    background-color:red;
+}
+
+
+#FlightsDiv {
+    border: 2px solid blue;
+}

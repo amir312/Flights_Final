@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link href="FlightHomePage_CSS.css" rel="stylesheet" />
+<script src="../Scripts/AJAXcall.js"></script>
+
+<title>ANT Flights</title>
+
+<script>
+    $(document).ready(function () {
+            
+        $("#searchBTN").click(getFlightFunc);
+        $("#MyflightBTN").click(getmyflightsList);
+        $("#ConBTN").click(ShowFilter);
+        mydata = [];
+        url = "https://api.skypicker.com/locations?type=dump&locale=en-US&location_types=airport&limit=4000&active_only=true&sort=name";
+        $.get(url).done(getDestinations);
+        $.get(url).fail(errorCB);
+        $("#editDiv").hide();
+
+    });
+ 
+
+    function orderNow(id) {
+        $("#frame").hide();
+        $("#editDiv").show();
+        $("#showID").val(id);
+    }
+    
+    function errorCB(err) {
+        console.log(err);
+    }
+    function getDestinations(data) {
+        console.log(data);
+        var arrDestinations=[];
+        for (var i = 0; i < data.locations.length; i++) {
+            arrDestinations[i] = {
+                "Staticid": i,
+                 "id": data.locations[i].airport_int_id,
+                "code": data.locations[i].id,
+                "location_x": data.locations[i].location.lat,
+                "location_y": data.locations[i].location.lon,
+                "name": data.locations[i].name
+            }
+        }
+        ajaxCall("POST","../api/Destinations",JSON.stringify(arrDestinations),InsertToDatabase,errorCB)               
+    }
+
+    function InsertToDatabase() {
+        console.log("Done");
+    }
+
+    function getFlightFunc() {
+        ///////////////////////////////////////////מקבל פרטים ממשתמש ומאתחל תתאריכים ויעדים/
+        //const partner = "tamir";
+        var from = $("#flyfrominput").val().toUpperCase();
+        var to = $("#flytoinput").val().toUpperCase();
+        var startDate = $("#departinput").val();
+        var returnDate = $("#returninput").val();
+        let Syear = startDate.substring(0, 4);
+        let Smonth = startDate.substring(5, 7);
+        let Sday = startDate.substring(8, 10);
+        let Tyear = returnDate.substring(0, 4);
+        let Tmonth = returnDate.substring(5, 7);
+        let Tday = returnDate.substring(8, 10);
+        startDate = Sday + "/" + Smonth + "/" + Syear;
+        returnDate = Tday + "/" + Tmonth + "/" + Tyear
+        /////////////////////////////////////////////////////////END/
+        ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
+
+        /////////////////////////////////////////////
+        //ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
+        ////////////////////////////////////////////
+    }
+
+
+    function DataGenertor(data) {
+        console.log(data)
+        data = data.data;
+        mydata = data;
+        console.log(mydata);
+        routsArr = [];
+        ShowData(data);
+    }
+
+    function ShowData(data) {
+            document.getElementById('result').innerHTML = "";
+        for (var i = 0; i < data.length; i++) {
+            str = '';
+            str = `
+                        <div id="FlightsDiv">
+                        <h1>Flight Details:</h1>
+                        <div> id:  <div><p id="id${i}">${data[i].id}</p></div></div>
+                        <div> Price: <p id="price${i}">${data[i].conversion.EUR}</p> <div> €</div></div>
+                        <div> Departure Time:<p id="dip_date${i}">${new Date(data[i].dTimeUTC * 1000)}</p> </div> 
+                        <div> Arrival Time:   <p id="arr_date${i}">${new Date(data[i].aTimeUTC * 1000)}</p></div>
+                        <div> Departure City: <p id="cityFrom${i}">${data[i].cityFrom}</p></div> 
+                        <div> Arrival City: <p id="cityTo${i}">${data[i].cityTo}</p> </div>
+                        <div> Airlines:<p id="airlines${i}">${data[i].airlines}</p>  </div> `;
+
+            var RoutesConnection = {
+                "i": i,
+                "cities": [],
+                "code": [],
+                "id":data[i].id
+            }
+            departuretime = new Date(data[i].dTimeUTC * 1000);
+            arrivaltime = new Date(data[i].aTimeUTC * 1000);
+            //הדפסת פירוט הקונקשנים של הטיסה
+            for (var j = 0; j < data[i].route.length; j++) {
+                str += `
+                                <div id="subflights${i}">
+                                <h2>Connection Flight No.${j + 1}:</h2>
+                                <div>${data[i].route[j].cityFrom}</div>
+                                <div>${data[i].route[j].cityTo}</div>
+                                <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
+                                <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
+                                <div>${data[i].route[j].flight_no}</div>
+                                </div>`;
+                RoutesConnection.cities.push(data[i].route[j].cityTo);
+                RoutesConnection.code.push(data[i].route[j].cityCodeTo);
+               
+            }
+           
+            routsArr.push(RoutesConnection);
+            str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
+            str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
+            str += `</div>`;
+            document.getElementById('result').innerHTML += str;
+            document.getElementById('showID').innerHTML =`${data[i].id}` ;
+
+        }
+    } 
+
+    function ShowFilter() {
+        CityC = $("#Set_Connection").val();
+        ajaxCall("GET", `../api/Flights/stop/${CityC}`,"", getMyFlightsSuccess, getMyFlightsError);
+    }
+
+
+    function errorData(err) {
+        console.log(err);
+    }
+
+    function addToMyFlights(index) {
+        var myflt = {
+
+            "id": (mydata[index].id).toString(), 
+            "price": mydata[index].price,
+            "flyFrom":mydata[index].cityCodeFrom,
+            "flyTo": mydata[index].cityCodeTo,
+            "departDate": document.getElementById(`dip_date${index}`).textContent,
+            "returnDate": document.getElementById(`arr_date${index}`).textContent,
+            "airlines":document.getElementById(`airlines${index}`).textContent     ,
+            "routes": routsArr[index].cities
+
+        }
+        var myroutes = [];
+        for (var i = 0; i < routsArr[index].code.length; i++) {
+              myroutes[i] = {
+              "i": i,
+                "city": routsArr[index].cities[i],
+                "code": routsArr[index].code[i],
+                "id":routsArr[index].id
+            
+        }
+        }
+      
+        console.log(myflt);
+        ajaxCall("POST", "../api/Flights", JSON.stringify(myflt), postMyFltSuccess, postMyFltError);
+        ajaxCall("POST", "../api/Route", JSON.stringify(myroutes), postMyFltSuccess, postMyFltError);
+    }
+
+    function postMyFltSuccess(data) {
+        console.log(data);
+
+
+    }
+    function postMyFltError(err) {
+        console.log(err);
+    }
+
+
+    function getmyflightsList() {
+        ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
+      
+    }
+
+
+    function getMyFlightsSuccess(data) {
+
+        console.log(data);
+        document.getElementById('result').innerHTML = "";
+        for (var i = 0; i < data.length; i++) {
+            str = '';
+            str = `
+                        <div>
+                        <h1 style="color:red">Flight Details:</h1>
+                        <p id="price${i}">Price: ${data[i].Price}</p>
+                        <p id="departDate{i}">Departure Time: ${data[i].DepartDate}</p>
+                        <p id="returnDate{i}">Return Time: ${data[i].ReturnDate}</p>
+                        <p id="flyFrom{i}">Departure City: ${data[i].FlyFrom}</p>
+                        <p id="flyTo{i}">Arrival City: ${data[i].FlyTo}</p>`;
+            str += `</div>`;
+
+            for (var j = 0; j < data[i].Routes.length; j++) {
+                if (j == data[i].Routes.length - 1)
+
+                    str += `<p><p>connection NO.${j+1}: ${data[i].Routes[j]}</p></div>`
+                else
+                    str += `<p>connection NO.${j+1}: ${data[i].Routes[j]}</p>`
+
+            }
+
+            document.getElementById('result').innerHTML += str;
+
+        }
+    }
+
+    function getMyFlightsError(err) {
+        console.log(err);
+    }
+</script>
+
+</head>
+
+
+
+
+
+<body>
+
+    <div class="container-fluid" id="frame">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Flight Information System - ANT</h1>
+
+
+                <div class="row" id="destenationDIV">
+                    <div class="col-sm-12">
+                        <p>
+                            Fly From
+                        </p>
+                        <input type="text" class="form-control" placeholder="Country, city or airport" id="flyfrominput" value="TLV">
+
+                        <p>
+                            Fly To
+                        </p>
+                        <input type="text" class="form-control" placeholder="Country, city or airport" id="flytoinput" value="NYC">
+                    </div>
+                    <!--<div class="row">
+                        <div class="col-sm-12">
+                            <p>
+                                Show With Connections
+                            </p>
+                            <input type="text" class="form-control" name="Dest" id="Set_Connection"><br>
+
+                            <input type="button" class="btn btn-primary btn-block" value="Show With Connections" id="ConBTN" />
+                        </div>
+                    </div>-->
+                </div>
+
+
+                <div class="row" id="dateDIV">
+                    <div class="col-sm-12">
+                        <p>
+                            Depart
+                        </p>
+                        <input type="date" class="form-control" placeholder="Depart" id="departinput" value="2020-05-25">
+
+                        <p>
+                            Return
+                        </p>
+                        <input type="date" class="form-control" placeholder="Return" id="returninput" value="2020-05-28">
+                    </div>
+
+                </div>
+                <div class="row d-flex justify-content-center" id="BTNid">
+                    <div class="col-sm-12" id="btnSearchDiv">
+                        <button type="button" class="btn btn-primary btn-block" id="searchBTN">Search</button>
+                    </div>
+
+                    <div class="col-sm-12" id="btnMyflightDiv">
+                        <button type="button" class="btn btn-primary btn-block" id="MyflightBTN">My Favorites</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editDiv">
+        <form id="orderForm">
+            <div class="form-group row">
+                <div>
+                    <p id="showID"></p>
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="fullName"><span class="red-star">★ </span>Full Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+                </div>
+
+
+                <div class="form-group col-sm-3">
+                    <label for="eMail"><span class="red-star">★ </span>Main Email</label>
+                    <input type="text" class="form-control" id="eMail" placeholder="name@name.com" required>
+                </div>
+
+                <div class="form-group col-sm-3">
+                    <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
+                    <input type="checkbox" class="form-control" id="acceptTerms" checked />
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+
+                
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">Save</button>
+            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
+        </form>
+    </div>
+
+</body>
+</html>
