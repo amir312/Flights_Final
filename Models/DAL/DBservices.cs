@@ -87,6 +87,59 @@ public class DBservices
 
     }
 
+
+    //--------------------------------------------------------------------------------------------------
+    // This method inserts a flight to the orderd flights table 
+    //--------------------------------------------------------------------------------------------------
+    public int DBSinsertOrderdFlight(OrderdFlight orderdflight)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommandOrderd(orderdflight);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            //for (int i = 0; i < flight.Routes.Count; i++)
+            //{
+            //    cStr = BuildInsertCommandRoute(flight.Id,flight,;
+            //}
+            return numEffected;
+
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
     //--------------------------------------------------------------------
     // Build the Insert command String
     //--------------------------------------------------------------------
@@ -94,12 +147,26 @@ public class DBservices
     {
         String command;
 
-
-
         StringBuilder sb = new StringBuilder();
         sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}')", flight.Id, flight.Price.ToString(), flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate);
         // use a string builder to create the dynamic string
         String prefix = "INSERT INTO MyFlights " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time ) ";
+        command = prefix + sb.ToString();
+
+        return command;
+    }
+
+
+
+
+    private String BuildInsertCommandOrderd(OrderdFlight flight)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("Values('{0}', '{1}', '{2}')", flight.FlightID, flight.FullName, flight.Email);
+        // use a string builder to create the dynamic string
+        String prefix = "INSERT INTO Ordered_Flights " + "(Flight_ID,Full_Name, Email) ";
         command = prefix + sb.ToString();
 
         return command;
