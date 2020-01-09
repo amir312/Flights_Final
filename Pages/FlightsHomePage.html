@@ -367,6 +367,12 @@
             let name = $("#fullNameID_Input").val();
             let mail = $("#eMail_input").val();
 
+            if (document.getElementById("acceptTerms").checked == false) {
+                alert("Please Accept Terms Before Ordering Flights");
+                return 0;
+            }
+
+
             OrderdFlight = {
                 flightID: id,
                 fullName: name,
@@ -387,6 +393,14 @@
 
 
         function addToMyFlights(index) {
+            var airlinesToSplit = document.getElementById(`airlines${index}`).textContent;
+            var res1 = airlinesToSplit.split(" ", 2);
+            var res2 = res1[1].split(",", 1);
+            
+
+
+
+
             var myflt = {
 
                 "id": (mydata[index].id).toString(),
@@ -395,7 +409,8 @@
                 "flyTo": mydata[index].cityCodeTo,
                 "departDate": document.getElementById(`dip_date${index}`).textContent,
                 "returnDate": document.getElementById(`arr_date${index}`).textContent,
-                "airlines": document.getElementById(`airlines${index}`).textContent
+                "airlines": res2,
+
                 //"routes": routsArr[index].cities
             }
             //var myroutes = [];
