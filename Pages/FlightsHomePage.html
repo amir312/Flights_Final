@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -15,6 +16,7 @@
 
     <!--NEW -Form Animation -  Currently not working on CSS-->
     <style>
+
         body {
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -293,13 +295,13 @@
 
                             <table class="table table-hover">
                             <thead>
-                             <tr>
-                             <th> Price </th>
-                             <th> Departure </th>
-                             <th> Arrival Time </th>
-                             <th> Departure City </th>
-                             <th> Arrival City </th>
-                             <th> Airlines </th>
+                                <tr>
+                                <th> Price </th>
+                                <th> Departure </th>
+                                <th> Arrival Time </th>
+                                <th> Departure City </th>
+                                <th> Arrival City </th>
+                                <th> Airlines </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -309,7 +311,7 @@
                             <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
                             <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
                             <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                            <td id="airlines${i}"> ${data[i].airlines} </td> 
+                            <td id="airlines${i}"> ${data[i].airlines} </td>
                             </tr>
                             </tbody>
 
@@ -408,9 +410,9 @@
                 "returnDate": document.getElementById(`arr_date${index}`).textContent,
                 "airlines": res3,
 
-               
+
             }
-           
+
             console.log(myflt);
             ajaxCall("POST", "../api/Flights", JSON.stringify(myflt), postMyFltSuccess, postMyFltError);
         }
@@ -425,31 +427,49 @@
         function getmyflightsList() {
             ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
         }
+
+        //build my favorite //
         function getMyFlightsSuccess(data) {
             console.log(data);
+
             document.getElementById('result').innerHTML = "";
+            str = `    <h1>Flight Details:</h1>
+                                <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                <th>#</th>
+                                <th> Price </th>
+                                <th> Departure </th>
+                                <th> Arrival Time </th>
+                                <th> Departure City </th>
+                                <th> Arrival City </th>
+                                <th> Airlines </th>
+                            </tr>
+                            </thead>
+                            <tbody>`;
             for (var i = 0; i < data.length; i++) {
-                str = '';
-                str = `
-                                    <div>
-                                    <h1 style="color:red">Flight Details:</h1>
-                                    <p id="price${i}">Price: ${data[i].Price}</p>
-                                    <p id="departDate{i}">Departure Time: ${data[i].DepartDate}</p>
-                                    <p id="returnDate{i}">Return Time: ${data[i].ReturnDate}</p>
-                                    <p id="flyFrom{i}">Departure City: ${data[i].FlyFrom}</p>
-                                    <p id="flyTo{i}">Arrival City: ${data[i].FlyTo}</p>`;
-                str += `</div>`;
-                //for (var j = 0; j < data[i].Routes.length; j++) {
-                //    if (j == data[i].Routes.length - 1)
+                // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
+                str += `
 
-                //        str += `<p><p>connection NO.${j+1}: ${data[i].Routes[j]}</p></div>`
-                //    else
-                //        str += `<p>connection NO.${j+1}: ${data[i].Routes[j]}</p>`
+                            <tr>
 
-                //}
-                document.getElementById('result').innerHTML += str;
+                            <td>${i + 1}</td>
+                            <td id="price${i}"> ${data[i].Price} € </td>
+                            <td id="departDate${i}"> ${data[i].DepartDate} </td>
+                            <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
+                            <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
+                            <td id="flyTo${i}"> ${data[i].FlyTo} </td>
+                            <td id="airlines${i}"> ${data[i].Airlines} </td>
+
+                            </tr>
+                            </tbody>`
+
+
             }
+            str += `</table>`;
+            document.getElementById('result').innerHTML += str;
         }
+
         function getMyFlightsError(err) {
             console.log(err);
         }
@@ -467,6 +487,41 @@
                 }
                 else {
                     alert("Try Agian");
+                }
+            }
+        }
+        //setup log in//////
+        var users;
+        ajaxCall('GET', "../api/signin", "", Signinsuccess, SigninError)
+        function Signinsuccess(data) {
+            console.log(data)
+            users = data;
+
+        }
+
+        function SigninError(data) {
+            alert("something happend with sginIn" + data);
+        }
+        var attempt = 3; // Variable to count number of attempts.
+        // Below function Executes on click of login button.
+        function validate() {
+            console.log(users);
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            if (users.find(element => element.Username == username && password == element.Password)) {
+                alert("Login successfully");
+                //window.location = "success.html"; // Redirecting to other page.
+                return false;
+            }
+            else {
+                attempt--;// Decrementing by one.
+                alert("You have left " + attempt + " attempt;");
+                // Disabling fields after 3 attempts.
+                if (attempt == 0) {
+                    document.getElementById("username").disabled = true;
+                    document.getElementById("password").disabled = true;
+                    document.getElementById("submit").disabled = true;
+                    return false;
                 }
             }
         }
@@ -530,7 +585,7 @@
                     <!-- start NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
                     <div class="col-sm-12" id="btnManagerLogInDiv">
-                        <button id="btnManagerLogIn" class="btn btn-primary btn-block" onclick="document.getElementById('id01').style.display='block'" >Manager Log In</button>
+                        <button id="btnManagerLogIn" class="btn btn-primary btn-block" onclick="document.getElementById('id01').style.display='block'">Manager Log In</button>
                     </div>
 
                     <!--end NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
@@ -575,8 +630,22 @@
         </form>
     </div>
 
-    <!--end NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
+    <!-- NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
+    <!-- log in html-->
 
+    <div class="container">
+        <div class="main">
+            <h2>כניסת מנהל אתר</h2>
+            <form id="form_id" method="post" name="myform">
+                <label>User Name :</label>
+                <input type="text" name="username" id="username" />
+                <label>Password :</label>
+                <input type="password" name="password" id="password" />
+                <input type="button" value="Login" id="submit" onclick="validate()" />
+            </form>
+
+        </div>
+    </div>
 
     <div id="editDiv">
         <div id="showID">ID</div>
