@@ -147,7 +147,7 @@ public class DBservices
         StringBuilder sb = new StringBuilder();
         sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}','{6}')", flight.Id, flight.Price.ToString(), flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate, flight.Airlines);
         // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO MyFlights " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time,Airlines ) ";
+        String prefix = "INSERT INTO All_Favorites " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time,Airlines ) ";
         command = prefix + sb.ToString();
 
         return command;
@@ -403,7 +403,7 @@ public class DBservices
         }
         try
         {
-            String selectSTR = "SELECT * FROM MyFlights";
+            String selectSTR = "SELECT * FROM All_Favorites";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
@@ -470,10 +470,10 @@ public class DBservices
         try
         {
             String selectSTR = $@"select *
-                                  from [dbo].[MyFlights]
+                                  from [dbo].[All_Favorites]
                                   where Id in (
                                   select  R.Id
-                                  from  [dbo].[MyFlights] F inner join [dbo].[Routes] R on F.Id=R.Id
+                                  from  [dbo].[All_Favorites] F inner join [dbo].[Routes] R on F.Id=R.Id
                                   where R.City='{city}')";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
