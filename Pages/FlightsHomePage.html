@@ -1,4 +1,4 @@
-﻿﻿﻿
+﻿﻿﻿﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +16,7 @@
 
     <!--NEW -Form Animation -  Currently not working on CSS-->
     <style>
+
 
 
         body {
@@ -240,40 +241,40 @@
             ShowData(data);
         }
 
-        
+
 
         function ShowData(data) {
             document.getElementById('result').innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 str = '';
                 str = `
-                                <div id="FlightsDiv">
-                                <h1>Flight Details:</h1>
-                                <div id="id${i}"> ${data[i].id}</div>
+                                    <div id="FlightsDiv">
+                                    <h1>Flight Details:</h1>
+                                    <div id="id${i}"> ${data[i].id}</div>
 
-                                <table class="table table-hover">
-                                <thead>
+                                    <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                        <th> Price </th>
+                                        <th> Departure </th>
+                                        <th> Arrival Time </th>
+                                        <th> Departure City </th>
+                                        <th> Arrival City </th>
+                                        <th> Airlines </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     <tr>
-                                    <th> Price </th>
-                                    <th> Departure </th>
-                                    <th> Arrival Time </th>
-                                    <th> Departure City </th>
-                                    <th> Arrival City </th>
-                                    <th> Airlines </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                <td id="price${i}"> ${data[i].conversion.EUR} € </td>
-                                <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
-                                <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
-                                <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
-                                <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                                <td id="airlines${i}"> ${data[i].airlines} </td>
-                                </tr>
-                                </tbody>
+                                    <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                    <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                    <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                    <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                    <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                    <td id="airlines${i}"> ${data[i].airlines} </td>
+                                    </tr>
+                                    </tbody>
 
-                                </table>`;
+                                    </table>`;
 
                 //var RoutesConnection = {
                 //    "i": i,
@@ -340,6 +341,9 @@
                 flightID: id,
                 fullName: name,
                 email: mail,
+                airline: airline1,
+                flyFrom: flyfrom1,
+                flyTo:flyto1
             };
             console.log(OrderdFlight);
             ajaxCall("POST", "../api/OrderFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
@@ -395,35 +399,35 @@
 
             document.getElementById('result').innerHTML = "";
             str = `    <h1>Flight Details:</h1>
-                                    <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                    <th>#</th>
-                                    <th> Price </th>
-                                    <th> Departure </th>
-                                    <th> Arrival Time </th>
-                                    <th> Departure City </th>
-                                    <th> Arrival City </th>
-                                    <th> Airlines </th>
-                                </tr>
-                                </thead>
-                                <tbody>`;
+                                        <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                        <th>#</th>
+                                        <th> Price </th>
+                                        <th> Departure </th>
+                                        <th> Arrival Time </th>
+                                        <th> Departure City </th>
+                                        <th> Arrival City </th>
+                                        <th> Airlines </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>`;
             for (var i = 0; i < data.length; i++) {
                 // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
                 str += `
 
-                                <tr>
+                                    <tr>
 
-                                <td>${i + 1}</td>
-                                <td id="price${i}"> ${data[i].Price} € </td>
-                                <td id="departDate${i}"> ${data[i].DepartDate} </td>
-                                <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
-                                <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
-                                <td id="flyTo${i}"> ${data[i].FlyTo} </td>
-                                <td id="airlines${i}"> ${data[i].Airlines} </td>
+                                    <td>${i + 1}</td>
+                                    <td id="price${i}"> ${data[i].Price} € </td>
+                                    <td id="departDate${i}"> ${data[i].DepartDate} </td>
+                                    <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
+                                    <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
+                                    <td id="flyTo${i}"> ${data[i].FlyTo} </td>
+                                    <td id="airlines${i}"> ${data[i].Airlines} </td>
 
-                                </tr>
-                                </tbody>`
+                                    </tr>
+                                    </tbody>`
 
 
             }
