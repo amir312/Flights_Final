@@ -44,11 +44,7 @@ namespace HW3.Controllers
         // POST api/<controller>
         public void Post([FromBody]Flight flt1)
         {
-            //Flight.flightList.Add(flt1);
-            //Flight f = new Flight();
-
-            flt1.insert();
-
+             flt1.insert();
         }
 
 
