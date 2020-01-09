@@ -1,4 +1,4 @@
-﻿﻿
+﻿﻿﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +16,7 @@
 
     <!--NEW -Form Animation -  Currently not working on CSS-->
     <style>
+
 
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -170,7 +171,9 @@
 
         // Get the modal
         var modal = document.getElementById('id01');
-
+        var airline1;
+        var flyfrom1;
+        var flyto1;
         // When the user clicks anywhere outside of the modal, close it
 
         //window.onclick = function (event) {
@@ -237,85 +240,40 @@
             ShowData(data);
         }
 
-        //function ShowData(data) {
-        //    document.getElementById('result').innerHTML = "";
-        //    for (var i = 0; i < data.length; i++) {
-        //        str = '';
-        //        str = `
-        //                            <div id="FlightsDiv">
-        //                            <h1>Flight Details:</h1>
-        //                            <div> id:  <div><p id="id${i}">${data[i].id}</p></div></div>
-        //                            <div> Price: <p id="price${i}">${data[i].conversion.EUR}</p> <div> €</div></div>
-        //                            <div> Departure Time:<p id="dip_date${i}">${new Date(data[i].dTimeUTC * 1000)}</p> </div>
-        //                            <div> Arrival Time:   <p id="arr_date${i}">${new Date(data[i].aTimeUTC * 1000)}</p></div>
-        //                            <div> Departure City: <p id="cityFrom${i}">${data[i].cityFrom}</p></div>
-        //                            <div> Arrival City: <p id="cityTo${i}">${data[i].cityTo}</p> </div>
-        //                            <div> Airlines:<p id="airlines${i}">${data[i].airlines}</p>  </div> `;
-
-        //        //var RoutesConnection = {
-        //        //    "i": i,
-        //        //    "cities": [],
-        //        //    "code": [],
-        //        //    "id":data[i].id
-        //        //}
-        //        departuretime = new Date(data[i].dTimeUTC * 1000);
-        //        arrivaltime = new Date(data[i].aTimeUTC * 1000);
-        //        //הדפסת פירוט הקונקשנים של הטיסה
-        //        //for (var j = 0; j < data[i].route.length; j++) {
-        //        //    str += `
-        //        //                    <div id="subflights${i}">
-        //        //                    <h2>Connection Flight No.${j + 1}:</h2>
-        //        //                    <div>${data[i].route[j].cityFrom}</div>
-        //        //                    <div>${data[i].route[j].cityTo}</div>
-        //        //                    <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
-        //        //                    <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
-        //        //                    <div>${data[i].route[j].flight_no}</div>
-        //        //                    </div>`;
-        //        //    RoutesConnection.cities.push(data[i].route[j].cityTo);
-        //        //    RoutesConnection.code.push(data[i].route[j].cityCodeTo);
-
-        //        //}
-        //        //routsArr.push(RoutesConnection);
-        //        str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
-        //        str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
-        //        str += `</div>`;
-        //        document.getElementById('result').innerHTML += str;
-        //        //document.getElementById('showID').innerHTML = `${data[i].id}` ;
-        //    }
-        //}
+        
 
         function ShowData(data) {
             document.getElementById('result').innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 str = '';
                 str = `
-                            <div id="FlightsDiv">
-                            <h1>Flight Details:</h1>
-                            <div id="id${i}"> ${data[i].id}</div>
+                                <div id="FlightsDiv">
+                                <h1>Flight Details:</h1>
+                                <div id="id${i}"> ${data[i].id}</div>
 
-                            <table class="table table-hover">
-                            <thead>
+                                <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                    <th> Price </th>
+                                    <th> Departure </th>
+                                    <th> Arrival Time </th>
+                                    <th> Departure City </th>
+                                    <th> Arrival City </th>
+                                    <th> Airlines </th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 <tr>
-                                <th> Price </th>
-                                <th> Departure </th>
-                                <th> Arrival Time </th>
-                                <th> Departure City </th>
-                                <th> Arrival City </th>
-                                <th> Airlines </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                            <td id="price${i}"> ${data[i].conversion.EUR} € </td>
-                            <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
-                            <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
-                            <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
-                            <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                            <td id="airlines${i}"> ${data[i].airlines} </td>
-                            </tr>
-                            </tbody>
+                                <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                <td id="airlines${i}"> ${data[i].airlines} </td>
+                                </tr>
+                                </tbody>
 
-                            </table>`;
+                                </table>`;
 
                 //var RoutesConnection = {
                 //    "i": i,
@@ -361,6 +319,9 @@
             $("#frame").hide();
             $("#editDiv").show();
             document.getElementById('showID').innerHTML = "Flight ID: " + (mydata[index].id).toString();
+            airline1 = mydata[index].airlines[0];
+            flyfrom1 = mydata[index].cityFrom;
+            flyto1 = mydata[index].cityTo;
         }
 
         function AddToOrdersTable() {
@@ -434,35 +395,35 @@
 
             document.getElementById('result').innerHTML = "";
             str = `    <h1>Flight Details:</h1>
-                                <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                <th>#</th>
-                                <th> Price </th>
-                                <th> Departure </th>
-                                <th> Arrival Time </th>
-                                <th> Departure City </th>
-                                <th> Arrival City </th>
-                                <th> Airlines </th>
-                            </tr>
-                            </thead>
-                            <tbody>`;
+                                    <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                    <th>#</th>
+                                    <th> Price </th>
+                                    <th> Departure </th>
+                                    <th> Arrival Time </th>
+                                    <th> Departure City </th>
+                                    <th> Arrival City </th>
+                                    <th> Airlines </th>
+                                </tr>
+                                </thead>
+                                <tbody>`;
             for (var i = 0; i < data.length; i++) {
                 // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
                 str += `
 
-                            <tr>
+                                <tr>
 
-                            <td>${i + 1}</td>
-                            <td id="price${i}"> ${data[i].Price} € </td>
-                            <td id="departDate${i}"> ${data[i].DepartDate} </td>
-                            <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
-                            <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
-                            <td id="flyTo${i}"> ${data[i].FlyTo} </td>
-                            <td id="airlines${i}"> ${data[i].Airlines} </td>
+                                <td>${i + 1}</td>
+                                <td id="price${i}"> ${data[i].Price} € </td>
+                                <td id="departDate${i}"> ${data[i].DepartDate} </td>
+                                <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
+                                <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
+                                <td id="flyTo${i}"> ${data[i].FlyTo} </td>
+                                <td id="airlines${i}"> ${data[i].Airlines} </td>
 
-                            </tr>
-                            </tbody>`
+                                </tr>
+                                </tbody>`
 
 
             }

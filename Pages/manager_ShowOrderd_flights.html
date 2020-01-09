@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+    <script src="../Scripts/AJAXcall.js"></script>
 
     <style type="text/css">
 
@@ -28,7 +29,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <script src="../Scripts/AJAXcall.js"></script>
 
     <script>
 
@@ -36,40 +36,17 @@
         $(document).ready(function () {
 
             // once the document is ready we fetch a list of flights from the server
-            ajaxCall("GET", "../api/OrderdFlight", "", getSuccess, error);
-                       
+            ajaxCall("GET", "../api/OrderdFlight", " ", getOrderSuccess, getOrderError);
+
+
         });
 
 
-          function getSuccess(orderData) {
-            
-            try{
-                tbl = $('#carsTable').DataTable({
-                    data: carsdata,
-                    pageLength: 5,
-                    columns: [
-                        { data: "Id" },
-                        { data: "Manufacturer" },
-                        { data: "Model" },
-                       
-                    ],
-                });
-                buttonEvents();
-            }
 
-            catch (err) {
-                alert(err);
-            }
-        }
-
-        // this function is activated in case of a failure
-        function error(err) {
-            swal("Error: " + err );
-        }
 
         // wire all the buttons to their functions
         function buttonEvents() {
-s       
+            s
             $(document).on("click", ".viewBtn", function () {
                 markSelected(this);
                 $("#editDiv").show();
@@ -78,7 +55,7 @@ s
                 populateFields(this.getAttribute('data-carId'));
             });
 
-          }
+        }
 
         // mark the selected row
         function markSelected(btn) {
@@ -87,8 +64,6 @@ s
             row.className = 'selected'; // mark as selected
         }
 
-        
-        
 
         // fill the form fields
         function populateFields(carId) {
@@ -141,12 +116,11 @@ s
         }
 
         // this function is activated in case of a success
-        function getSuccess(of_data) {
-            cars = of_data; // keep the cars array in a global variable;
+        function getOrderSuccess(data) {
+
             try {
                 tbl = $('#orderd_flightTBL').DataTable({
-                    data: of_data,
-                    pageLength: 5,
+                    pageLength: 6,
                     columns: [
                         { data: "Id" },
                         { data: "Full Name" },
@@ -155,8 +129,7 @@ s
                         { data: "FlyFrom" },
                         { data: "FlyTo" },
 
-
-                      ],
+                    ],
                 });
                 buttonEvents();
             }
@@ -167,9 +140,23 @@ s
         }
 
         // this function is activated in case of a failure
-        function error(err) {
-            swal("Error: " + err);
+        function getOrderError(err) {
+            alert("Error: " + err);
+            console.log("Error: " + err);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </script>
 
