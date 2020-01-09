@@ -16,13 +16,8 @@ namespace HW3.Controllers
         // GET api/<controller>
         public IEnumerable<Flight> Get()
         {
-            //return new string[] { "value1", "value2" };
-            //   Flight flt1 = new Flight();
-            // return flt1.getFlight();
-           
                 Flight flight = new Flight();
-                    return flight.getMYflights();
-          
+                return flight.getMYflights();
         }
 
 
