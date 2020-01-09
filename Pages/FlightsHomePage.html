@@ -48,6 +48,8 @@
                 opacity: 0.8;
             }
 
+
+
         /* Extra styles for the cancel button */
         .cancelbtn {
             width: auto;
@@ -114,6 +116,7 @@
                 color: red;
                 cursor: pointer;
             }
+
 
         /* Add Zoom Animation */
         .animate {
@@ -429,7 +432,6 @@
                                     </tr>
                                     </tbody>`
 
-
             }
             str += `</table>`;
             document.getElementById('result').innerHTML += str;
@@ -438,23 +440,24 @@
         function getMyFlightsError(err) {
             console.log(err);
         }
-        function CheckLogIn() {
-            if (true) {
-                var x, text;
-                // Get the value of the input field with id="numb"
-                // x = document.getElementById("numb").value;
-                psw = $("#pswInput").val();
-                user = $("#inputUname").val();
+        //function CheckLogIn() {
+        //    if (true) {
+        //        var x, text;
+        //        // Get the value of the input field with id="numb"
+        //        // x = document.getElementById("numb").value;
+        //        psw = $("#pswInput").val();
+        //        user = $("#inputUname").val();
 
-                // If x is Not a Number or less than one or greater than 10
-                if (psw == "1" && user == "a") {
-                    alert("OK");
-                }
-                else {
-                    alert("Try Agian");
-                }
-            }
-        }
+        //        // If x is Not a Number or less than one or greater than 10
+        //        if (psw == "1" && user == "a") {                  
+        //            alert("OK");
+                    
+        //        }
+        //        else {
+        //            alert("Try Agian");
+        //        }
+        //    }
+        //}
         //setup log in//////
         var users;
         ajaxCall('GET', "../api/signin", "", Signinsuccess, SigninError)
@@ -475,6 +478,7 @@
             var password = document.getElementById("password").value;
             if (users.find(element => element.Username == username && password == element.Password)) {
                 alert("Login successfully");
+                getmyflightsList();
                 //window.location = "success.html"; // Redirecting to other page.
                 return false;
             }
@@ -494,6 +498,11 @@
 </head>
 
 <body>
+
+    <div class="topnav">
+        <a class="active" href="#home">Home</a>
+        <a href="LoginManagerPage.html">Manager Login</a>
+    </div>
 
     <div class="container-fluid" id="frame">
         <div class="row">
@@ -549,9 +558,9 @@
 
                     <!-- start NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
-                    <div class="col-sm-12" id="btnManagerLogInDiv">
+                    <!--<div class="col-sm-12" id="btnManagerLogInDiv">
                         <button id="btnManagerLogIn" class="btn btn-primary btn-block" onclick="document.getElementById('id01').style.display='block'">Manager Log In</button>
-                    </div>
+                    </div>-->
 
                     <!--end NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
@@ -567,7 +576,6 @@
     <!-- start NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
     <div id="id01" class="modal">
-
         <form class="modal-content animate" action="/action_page.php" method="post">
             <div class="imgcontainer">
                 <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
@@ -582,7 +590,7 @@
                 <label for="psw"><b>Password</b></label>
                 <input id="pswInput" type="password" placeholder="Enter Password" name="psw" required>
 
-                <button type="button" onclick="CheckLogIn()">Login</button>
+                <!--<button type="button" onclick="CheckLogIn()">Login</button>-->
                 <label>
                     <input type="checkbox" checked="checked" name="remember"> Remember me
                 </label>
@@ -641,6 +649,5 @@
             <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
         </form>
     </div>
-
 </body>
 </html>
