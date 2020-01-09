@@ -1,476 +1,530 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link href="FlightHomePage_CSS.css" rel="stylesheet" />
-    <script src="../Scripts/AJAXcall.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>ANT Flights</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link href="FlightHomePage_CSS.css" rel="stylesheet" />
+<script src="../Scripts/AJAXcall.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<title>ANT Flights</title>
 
-    <!--NEW -Form Animation -  Currently not working on CSS-->
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
+<!--NEW -Form Animation -  Currently not working on CSS-->
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Full-width input fields */
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    /* Set a style for all buttons */
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        button:hover {
+            opacity: 0.8;
         }
 
-        /* Full-width input fields */
-        input[type=text], input[type=password] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
+    /* Extra styles for the cancel button */
+    .cancelbtn {
+        width: auto;
+        padding: 10px 18px;
+        background-color: #f44336;
+    }
 
-        /* Set a style for all buttons */
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
+    /* Center the image and position the close button */
+    .imgcontainer {
+        text-align: center;
+        margin: 24px 0 12px 0;
+        position: relative;
+    }
+
+    img.avatar {
+        width: 40%;
+        border-radius: 50%;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    span.psw {
+        float: right;
+        padding-top: 16px;
+    }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        padding-top: 60px;
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button (x) */
+    .close {
+        position: absolute;
+        right: 25px;
+        top: 0;
+        color: #000;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: red;
             cursor: pointer;
+        }
+
+    /* Add Zoom Animation */
+    .animate {
+        -webkit-animation: animatezoom 0.6s;
+        animation: animatezoom 0.6s
+    }
+
+    @-webkit-keyframes animatezoom {
+        from {
+            -webkit-transform: scale(0)
+        }
+
+        to {
+            -webkit-transform: scale(1)
+        }
+    }
+
+    @keyframes animatezoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    /* Change styles for span and cancel button on extra small screens */
+    @media screen and (max-width: 300px) {
+        span.psw {
+            display: block;
+            float: none;
+        }
+
+        .cancelbtn {
             width: 100%;
         }
+    }
+</style>
 
-            button:hover {
-                opacity: 0.8;
-            }
+<!--NEW -Form Animation -  Currently not working on CSS-->
 
-        /* Extra styles for the cancel button */
-        .cancelbtn {
-            width: auto;
-            padding: 10px 18px;
-            background-color: #f44336;
-        }
+<script>
+    $(document).ready(function () {
+        $("#searchBTN").click(getFlightFunc);
+        $("#MyflightBTN").click(getmyflightsList);
+        //$("#ConBTN").click(ShowFilter);
+        mydata = [];
+        url = "https://api.skypicker.com/locations?type=dump&locale=en-US&location_types=airport&limit=4000&active_only=true&sort=name";
+        $.get(url).done(getDestinations);
+        $.get(url).fail(errorCB);
+        $("#editDiv").hide();
+    });
 
-        /* Center the image and position the close button */
-        .imgcontainer {
-            text-align: center;
-            margin: 24px 0 12px 0;
-            position: relative;
-        }
+    //start  NEW NEW NEW NEW NEW NEW NEW NEW NEW
 
-        img.avatar {
-            width: 40%;
-            border-radius: 50%;
-        }
+    // Get the modal
+    var modal = document.getElementById('id01');
 
-        .container {
-            padding: 16px;
-        }
+    // When the user clicks anywhere outside of the modal, close it
 
-        span.psw {
-            float: right;
-            padding-top: 16px;
-        }
+    //window.onclick = function (event) {
+    //    if (event.target == modal) {
+    //        modal.style.display = "none";
+    //    }
+    //}
 
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-            padding-top: 60px;
-        }
+    //end  NEW NEW NEW NEW NEW NEW NEW NEW NEW
 
-        /* Modal Content/Box */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-        }
 
-        /* The Close Button (x) */
-        .close {
-            position: absolute;
-            right: 25px;
-            top: 0;
-            color: #000;
-            font-size: 35px;
-            font-weight: bold;
-        }
 
-            .close:hover,
-            .close:focus {
-                color: red;
-                cursor: pointer;
-            }
-
-        /* Add Zoom Animation */
-        .animate {
-            -webkit-animation: animatezoom 0.6s;
-            animation: animatezoom 0.6s
-        }
-
-        @-webkit-keyframes animatezoom {
-            from {
-                -webkit-transform: scale(0)
-            }
-
-            to {
-                -webkit-transform: scale(1)
+    function errorCB(err) {
+        console.log(err);
+    }
+    function getDestinations(data) {
+        console.log(data);
+        var arrDestinations = [];
+        for (var i = 0; i < data.locations.length; i++) {
+            arrDestinations[i] = {
+                "Staticid": i,
+                "id": data.locations[i].airport_int_id,
+                "code": data.locations[i].id,
+                "location_x": data.locations[i].location.lat,
+                "location_y": data.locations[i].location.lon,
+                "name": data.locations[i].name
             }
         }
+        ajaxCall("POST", "../api/Destinations", JSON.stringify(arrDestinations), InsertToDatabase, errorCB)
+    }
 
-        @keyframes animatezoom {
-            from {
-                transform: scale(0)
-            }
+    function InsertToDatabase() {
+        console.log("Done");
+    }
 
-            to {
-                transform: scale(1)
-            }
-        }
+    function getFlightFunc() {
+        ///////////////////////////////////////////מקבל פרטים ממשתמש ומאתחל תתאריכים ויעדים/
 
-        /* Change styles for span and cancel button on extra small screens */
-        @media screen and (max-width: 300px) {
-            span.psw {
-                display: block;
-                float: none;
-            }
+        var from = $("#flyfrominput").val().toUpperCase();
+        var to = $("#flytoinput").val().toUpperCase();
+        var startDate = $("#departinput").val();
+        var returnDate = $("#returninput").val();
+        let Syear = startDate.substring(0, 4);
+        let Smonth = startDate.substring(5, 7);
+        let Sday = startDate.substring(8, 10);
+        let Tyear = returnDate.substring(0, 4);
+        let Tmonth = returnDate.substring(5, 7);
+        let Tday = returnDate.substring(8, 10);
+        startDate = Sday + "/" + Smonth + "/" + Syear;
+        returnDate = Tday + "/" + Tmonth + "/" + Tyear
+        /////////////////////////////////////////////////////////END/
+        ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
+        /////////////////////////////////////////////
+        //ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
+        ////////////////////////////////////////////
+    }
 
-            .cancelbtn {
-                width: 100%;
-            }
-        }
-    </style>
+    function DataGenertor(data) {
+        console.log(data)
+        data = data.data;
+        mydata = data;
+        console.log(mydata);
+        routsArr = [];
+        ShowData(data);
+    }
 
-    <!--NEW -Form Animation -  Currently not working on CSS-->
+    //function ShowData(data) {
+    //    document.getElementById('result').innerHTML = "";
+    //    for (var i = 0; i < data.length; i++) {
+    //        str = '';
+    //        str = `
+    //                            <div id="FlightsDiv">
+    //                            <h1>Flight Details:</h1>
+    //                            <div> id:  <div><p id="id${i}">${data[i].id}</p></div></div>
+    //                            <div> Price: <p id="price${i}">${data[i].conversion.EUR}</p> <div> €</div></div>
+    //                            <div> Departure Time:<p id="dip_date${i}">${new Date(data[i].dTimeUTC * 1000)}</p> </div>
+    //                            <div> Arrival Time:   <p id="arr_date${i}">${new Date(data[i].aTimeUTC * 1000)}</p></div>
+    //                            <div> Departure City: <p id="cityFrom${i}">${data[i].cityFrom}</p></div>
+    //                            <div> Arrival City: <p id="cityTo${i}">${data[i].cityTo}</p> </div>
+    //                            <div> Airlines:<p id="airlines${i}">${data[i].airlines}</p>  </div> `;
 
-    <script>
-        $(document).ready(function () {
-            $("#searchBTN").click(getFlightFunc);
-            $("#MyflightBTN").click(getmyflightsList);
-            //$("#ConBTN").click(ShowFilter);
-            mydata = [];
-            url = "https://api.skypicker.com/locations?type=dump&locale=en-US&location_types=airport&limit=4000&active_only=true&sort=name";
-            $.get(url).done(getDestinations);
-            $.get(url).fail(errorCB);
-            $("#editDiv").hide();
-        });
+    //        //var RoutesConnection = {
+    //        //    "i": i,
+    //        //    "cities": [],
+    //        //    "code": [],
+    //        //    "id":data[i].id
+    //        //}
+    //        departuretime = new Date(data[i].dTimeUTC * 1000);
+    //        arrivaltime = new Date(data[i].aTimeUTC * 1000);
+    //        //הדפסת פירוט הקונקשנים של הטיסה
+    //        //for (var j = 0; j < data[i].route.length; j++) {
+    //        //    str += `
+    //        //                    <div id="subflights${i}">
+    //        //                    <h2>Connection Flight No.${j + 1}:</h2>
+    //        //                    <div>${data[i].route[j].cityFrom}</div>
+    //        //                    <div>${data[i].route[j].cityTo}</div>
+    //        //                    <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
+    //        //                    <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
+    //        //                    <div>${data[i].route[j].flight_no}</div>
+    //        //                    </div>`;
+    //        //    RoutesConnection.cities.push(data[i].route[j].cityTo);
+    //        //    RoutesConnection.code.push(data[i].route[j].cityCodeTo);
 
-        //start  NEW NEW NEW NEW NEW NEW NEW NEW NEW
+    //        //}
+    //        //routsArr.push(RoutesConnection);
+    //        str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
+    //        str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
+    //        str += `</div>`;
+    //        document.getElementById('result').innerHTML += str;
+    //        //document.getElementById('showID').innerHTML = `${data[i].id}` ;
+    //    }
+    //}
 
-        // Get the modal
-        var modal = document.getElementById('id01');
+    function ShowData(data) {
+        document.getElementById('result').innerHTML = "";
+        for (var i = 0; i < data.length; i++) {
+            str = '';
+            str = `
+                        <div id="FlightsDiv">
+                        <h1>Flight Details:</h1>
+                        <div id="id${i}"> ${data[i].id}</div>
 
-        // When the user clicks anywhere outside of the modal, close it
-
-        //window.onclick = function (event) {
-        //    if (event.target == modal) {
-        //        modal.style.display = "none";
-        //    }
-        //}
-
-        //end  NEW NEW NEW NEW NEW NEW NEW NEW NEW
-
-
-
-        function errorCB(err) {
-            console.log(err);
-        }
-        function getDestinations(data) {
-            console.log(data);
-            var arrDestinations = [];
-            for (var i = 0; i < data.locations.length; i++) {
-                arrDestinations[i] = {
-                    "Staticid": i,
-                    "id": data.locations[i].airport_int_id,
-                    "code": data.locations[i].id,
-                    "location_x": data.locations[i].location.lat,
-                    "location_y": data.locations[i].location.lon,
-                    "name": data.locations[i].name
-                }
-            }
-            ajaxCall("POST", "../api/Destinations", JSON.stringify(arrDestinations), InsertToDatabase, errorCB)
-        }
-
-        function InsertToDatabase() {
-            console.log("Done");
-        }
-
-        function getFlightFunc() {
-            ///////////////////////////////////////////מקבל פרטים ממשתמש ומאתחל תתאריכים ויעדים/
-
-            var from = $("#flyfrominput").val().toUpperCase();
-            var to = $("#flytoinput").val().toUpperCase();
-            var startDate = $("#departinput").val();
-            var returnDate = $("#returninput").val();
-            let Syear = startDate.substring(0, 4);
-            let Smonth = startDate.substring(5, 7);
-            let Sday = startDate.substring(8, 10);
-            let Tyear = returnDate.substring(0, 4);
-            let Tmonth = returnDate.substring(5, 7);
-            let Tday = returnDate.substring(8, 10);
-            startDate = Sday + "/" + Smonth + "/" + Syear;
-            returnDate = Tday + "/" + Tmonth + "/" + Tyear
-            /////////////////////////////////////////////////////////END/
-            ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
-            /////////////////////////////////////////////
-            //ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
-            ////////////////////////////////////////////
-        }
-
-        function DataGenertor(data) {
-            console.log(data)
-            data = data.data;
-            mydata = data;
-            console.log(mydata);
-            routsArr = [];
-            ShowData(data);
-        }
-
-        //function ShowData(data) {
-        //    document.getElementById('result').innerHTML = "";
-        //    for (var i = 0; i < data.length; i++) {
-        //        str = '';
-        //        str = `
-        //                            <div id="FlightsDiv">
-        //                            <h1>Flight Details:</h1>
-        //                            <div> id:  <div><p id="id${i}">${data[i].id}</p></div></div>
-        //                            <div> Price: <p id="price${i}">${data[i].conversion.EUR}</p> <div> €</div></div>
-        //                            <div> Departure Time:<p id="dip_date${i}">${new Date(data[i].dTimeUTC * 1000)}</p> </div>
-        //                            <div> Arrival Time:   <p id="arr_date${i}">${new Date(data[i].aTimeUTC * 1000)}</p></div>
-        //                            <div> Departure City: <p id="cityFrom${i}">${data[i].cityFrom}</p></div>
-        //                            <div> Arrival City: <p id="cityTo${i}">${data[i].cityTo}</p> </div>
-        //                            <div> Airlines:<p id="airlines${i}">${data[i].airlines}</p>  </div> `;
-
-        //        //var RoutesConnection = {
-        //        //    "i": i,
-        //        //    "cities": [],
-        //        //    "code": [],
-        //        //    "id":data[i].id
-        //        //}
-        //        departuretime = new Date(data[i].dTimeUTC * 1000);
-        //        arrivaltime = new Date(data[i].aTimeUTC * 1000);
-        //        //הדפסת פירוט הקונקשנים של הטיסה
-        //        //for (var j = 0; j < data[i].route.length; j++) {
-        //        //    str += `
-        //        //                    <div id="subflights${i}">
-        //        //                    <h2>Connection Flight No.${j + 1}:</h2>
-        //        //                    <div>${data[i].route[j].cityFrom}</div>
-        //        //                    <div>${data[i].route[j].cityTo}</div>
-        //        //                    <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
-        //        //                    <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
-        //        //                    <div>${data[i].route[j].flight_no}</div>
-        //        //                    </div>`;
-        //        //    RoutesConnection.cities.push(data[i].route[j].cityTo);
-        //        //    RoutesConnection.code.push(data[i].route[j].cityCodeTo);
-
-        //        //}
-        //        //routsArr.push(RoutesConnection);
-        //        str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
-        //        str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
-        //        str += `</div>`;
-        //        document.getElementById('result').innerHTML += str;
-        //        //document.getElementById('showID').innerHTML = `${data[i].id}` ;
-        //    }
-        //}
-
-        function ShowData(data) {
-            document.getElementById('result').innerHTML = "";
-            for (var i = 0; i < data.length; i++) {
-                str = '';
-                str = `
-                            <div id="FlightsDiv">
-                            <h1>Flight Details:</h1>
-                            <div id="id${i}"> ${data[i].id}</div>
-
-                            <table class="table table-hover">
-                            <thead>
-                             <tr>
-                             <th> Price </th>
-                             <th> Departure </th>
-                             <th> Arrival Time </th>
-                             <th> Departure City </th>
-                             <th> Arrival City </th>
-                             <th> Airlines </th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                        <table class="table table-hover">
+                        <thead>
                             <tr>
-                            <td id="price${i}"> ${data[i].conversion.EUR} € </td>
-                            <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
-                            <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
-                            <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
-                            <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                            <td id="airlines${i}"> ${data[i].airlines} </td> 
-                            </tr>
-                            </tbody>
+                            <th> Price </th>
+                            <th> Departure </th>
+                            <th> Arrival Time </th>
+                            <th> Departure City </th>
+                            <th> Arrival City </th>
+                            <th> Airlines </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                        <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                        <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                        <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                        <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                        <td id="airlines${i}"> ${data[i].airlines} </td> 
+                        </tr>
+                        </tbody>
 
-                            </table>`;
+                        </table>`;
 
-                //var RoutesConnection = {
-                //    "i": i,
-                //    "cities": [],
-                //    "code": [],
-                //    "id":data[i].id
-                //}
-                departuretime = new Date(data[i].dTimeUTC * 1000);
-                arrivaltime = new Date(data[i].aTimeUTC * 1000);
-                //הדפסת פירוט הקונקשנים של הטיסה
-                //for (var j = 0; j < data[i].route.length; j++) {
-                //    str += `
-                //                    <div id="subflights${i}">
-                //                    <h2>Connection Flight No.${j + 1}:</h2>
-                //                    <div>${data[i].route[j].cityFrom}</div>
-                //                    <div>${data[i].route[j].cityTo}</div>
-                //                    <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
-                //                    <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
-                //                    <div>${data[i].route[j].flight_no}</div>
-                //                    </div>`;
-                //    RoutesConnection.cities.push(data[i].route[j].cityTo);
-                //    RoutesConnection.code.push(data[i].route[j].cityCodeTo);
+            //var RoutesConnection = {
+            //    "i": i,
+            //    "cities": [],
+            //    "code": [],
+            //    "id":data[i].id
+            //}
+            departuretime = new Date(data[i].dTimeUTC * 1000);
+            arrivaltime = new Date(data[i].aTimeUTC * 1000);
+            //הדפסת פירוט הקונקשנים של הטיסה
+            //for (var j = 0; j < data[i].route.length; j++) {
+            //    str += `
+            //                    <div id="subflights${i}">
+            //                    <h2>Connection Flight No.${j + 1}:</h2>
+            //                    <div>${data[i].route[j].cityFrom}</div>
+            //                    <div>${data[i].route[j].cityTo}</div>
+            //                    <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
+            //                    <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
+            //                    <div>${data[i].route[j].flight_no}</div>
+            //                    </div>`;
+            //    RoutesConnection.cities.push(data[i].route[j].cityTo);
+            //    RoutesConnection.code.push(data[i].route[j].cityCodeTo);
 
-                //}
-                //routsArr.push(RoutesConnection);
-                str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
-                str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
-                str += `</div>`;
-                document.getElementById('result').innerHTML += str;
-            }
+            //}
+            //routsArr.push(RoutesConnection);
+            str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
+            str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
+            str += `</div>`;
+            document.getElementById('result').innerHTML += str;
         }
+    }
 
-        //function ShowFilter() {
-        //    CityC = $("#Set_Connection").val();
-        //    ajaxCall("GET", `../api/Flights/stop/${CityC}`,"", getMyFlightsSuccess, getMyFlightsError);
-        //}
+    //function ShowFilter() {
+    //    CityC = $("#Set_Connection").val();
+    //    ajaxCall("GET", `../api/Flights/stop/${CityC}`,"", getMyFlightsSuccess, getMyFlightsError);
+    //}
 
-        function errorData(err) {
-            console.log(err);
-        }
+    function errorData(err) {
+        console.log(err);
+    }
 
-        function orderNow(index) {
-            $("#frame").hide();
-            $("#editDiv").show();
-            document.getElementById('showID').innerHTML = "Flight ID: " + (mydata[index].id).toString();
-        }
+    function orderNow(index) {
+        $("#frame").hide();
+        $("#editDiv").show();
+        document.getElementById('showID').innerHTML = "Flight ID: " + (mydata[index].id).toString();
+    }
 
-        function AddToOrdersTable() {
+    function AddToOrdersTable() {
 
-            let id = document.getElementById('showID').innerHTML;
-            let name = $("#fullNameID_Input").val();
-            let mail = $("#eMail_input").val();
+        let id = document.getElementById('showID').innerHTML;
+        let name = $("#fullNameID_Input").val();
+        let mail = $("#eMail_input").val();
 
-            if (document.getElementById("acceptTerms").checked == false) {
-                alert("Please Accept Terms Before Ordering Flights");
-                return 0;
-            }
-
-
-            OrderdFlight = {
-                flightID: id,
-                fullName: name,
-                email: mail,
-            };
-            console.log(OrderdFlight);
-            ajaxCall("POST", "../api/OrderFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
-        }
-
-        function postORDERSuccess(data) {
-            console.log(data);
-            alert("Add To orderd Flight");
-        }
-
-        function postORDERError(err) {
-            alert("Error Alert");
+        if (document.getElementById("acceptTerms").checked == false) {
+            alert("Please Accept Terms Before Ordering Flights");
+            return 0;
         }
 
 
-        function addToMyFlights(index) {
-            var airlinesToSplit = document.getElementById(`airlines${index}`).textContent;
-            var res1 = airlinesToSplit.split(" ", 2);
-            var res2 = res1[1].split(",", 1);
-            var res3 = res2.toString();
+        OrderdFlight = {
+            flightID: id,
+            fullName: name,
+            email: mail,
+        };
+        console.log(OrderdFlight);
+        ajaxCall("POST", "../api/OrderFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
+    }
 
-            var myflt = {
+    function postORDERSuccess(data) {
+        console.log(data);
+        alert("Add To orderd Flight");
+    }
 
-                "id": (mydata[index].id).toString(),
-                "price": mydata[index].price,
-                "flyFrom": mydata[index].cityCodeFrom,
-                "flyTo": mydata[index].cityCodeTo,
-                "departDate": document.getElementById(`dip_date${index}`).textContent,
-                "returnDate": document.getElementById(`arr_date${index}`).textContent,
-                "airlines": res3,
+    function postORDERError(err) {
+        alert("Error Alert");
+    }
+
+
+    function addToMyFlights(index) {
+        var airlinesToSplit = document.getElementById(`airlines${index}`).textContent;
+        var res1 = airlinesToSplit.split(" ", 2);
+        var res2 = res1[1].split(",", 1);
+        var res3 = res2.toString();
+
+        var myflt = {
+
+            "id": (mydata[index].id).toString(),
+            "price": mydata[index].price,
+            "flyFrom": mydata[index].cityCodeFrom,
+            "flyTo": mydata[index].cityCodeTo,
+            "departDate": document.getElementById(`dip_date${index}`).textContent,
+            "returnDate": document.getElementById(`arr_date${index}`).textContent,
+            "airlines": res3,
 
                
-            }
+        }
            
-            console.log(myflt);
-            ajaxCall("POST", "../api/Flights", JSON.stringify(myflt), postMyFltSuccess, postMyFltError);
-        }
+        console.log(myflt);
+        ajaxCall("POST", "../api/Flights", JSON.stringify(myflt), postMyFltSuccess, postMyFltError);
+    }
 
-        function postMyFltSuccess(data) {
-            console.log(data);
-        }
-        function postMyFltError(err) {
-            console.log(err);
-        }
+    function postMyFltSuccess(data) {
+        console.log(data);
+    }
+    function postMyFltError(err) {
+        console.log(err);
+    }
 
-        function getmyflightsList() {
-            ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
+    function getmyflightsList() {
+        ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
+    }
+
+    //build my favorite // 
+    function getMyFlightsSuccess(data) {
+        console.log(data);
+            
+        document.getElementById('result').innerHTML = "";
+        str = `    <h1>Flight Details:</h1>
+                            <table class="table table-hover">
+                        <thead>
+                            <tr>
+                            <th>#</th>
+                            <th> Price </th>
+                            <th> Departure </th>
+                            <th> Arrival Time </th>
+                            <th> Departure City </th>
+                            <th> Arrival City </th>
+                            <th> Airlines </th>
+                        </tr>
+                        </thead>
+                        <tbody>`;
+        for (var i = 0; i < data.length; i++) {
+              // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
+            str += `
+                        
+                        <tr>
+
+                        <td>${i+1}</td>
+                        <td id="price${i}"> ${data[i].Price} € </td>
+                        <td id="departDate${i}"> ${data[i].DepartDate} </td>
+                        <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
+                        <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
+                        <td id="flyTo${i}"> ${data[i].FlyTo} </td>
+                        <td id="airlines${i}"> ${data[i].Airlines} </td>
+                      
+                        </tr>
+                        </tbody>`                           
+
+
         }
-        function getMyFlightsSuccess(data) {
-            console.log(data);
-            document.getElementById('result').innerHTML = "";
-            for (var i = 0; i < data.length; i++) {
-                str = '';
-                str = `
-                                    <div>
-                                    <h1 style="color:red">Flight Details:</h1>
-                                    <p id="price${i}">Price: ${data[i].Price}</p>
-                                    <p id="departDate{i}">Departure Time: ${data[i].DepartDate}</p>
-                                    <p id="returnDate{i}">Return Time: ${data[i].ReturnDate}</p>
-                                    <p id="flyFrom{i}">Departure City: ${data[i].FlyFrom}</p>
-                                    <p id="flyTo{i}">Arrival City: ${data[i].FlyTo}</p>`;
-                str += `</div>`;
-                //for (var j = 0; j < data[i].Routes.length; j++) {
-                //    if (j == data[i].Routes.length - 1)
+str+= `</table>`;
+            document.getElementById('result').innerHTML += str;
+        }
+ 
+    function getMyFlightsError(err) {
+        console.log(err);
+    }
+    function CheckLogIn() {
+        if (true) {
+            var x, text;
+            // Get the value of the input field with id="numb"
+            // x = document.getElementById("numb").value;
+            psw = $("#pswInput").val();
+            user = $("#inputUname").val();
 
-                //        str += `<p><p>connection NO.${j+1}: ${data[i].Routes[j]}</p></div>`
-                //    else
-                //        str += `<p>connection NO.${j+1}: ${data[i].Routes[j]}</p>`
-
-                //}
-                document.getElementById('result').innerHTML += str;
+            // If x is Not a Number or less than one or greater than 10
+            if (psw == "1" && user == "a") {
+                alert("OK");
+            }
+            else {
+                alert("Try Agian");
             }
         }
-        function getMyFlightsError(err) {
-            console.log(err);
-        }
-        function CheckLogIn() {
-            if (true) {
-                var x, text;
-                // Get the value of the input field with id="numb"
-                // x = document.getElementById("numb").value;
-                psw = $("#pswInput").val();
-                user = $("#inputUname").val();
+    }
+//setup log in//////
+    var users; 
+    ajaxCall('GET', "../api/signin", "", Signinsuccess, SigninError)
+    function Signinsuccess(data) {
+        console.log(data)
+        users = data;
+        
+    }
 
-                // If x is Not a Number or less than one or greater than 10
-                if (psw == "1" && user == "a") {
-                    alert("OK");
-                }
-                else {
-                    alert("Try Agian");
-                }
-            }
-        }
-    </script>
+    function SigninError(data) {
+        alert("something happend with sginIn"+ data);
+    }
+    var attempt = 3; // Variable to count number of attempts.
+// Below function Executes on click of login button.
+    function validate() {
+        console.log(users);
+var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        if(users.find(element => element.Username == username && password==element.Password))
+        {
+alert ("Login successfully");
+//window.location = "success.html"; // Redirecting to other page.
+return false;
+}
+else{
+attempt --;// Decrementing by one.
+alert("You have left "+attempt+" attempt;");
+// Disabling fields after 3 attempts.
+if( attempt == 0){
+document.getElementById("username").disabled = true;
+document.getElementById("password").disabled = true;
+document.getElementById("submit").disabled = true;
+return false;
+}
+}
+}
+</script>
 </head>
 
 <body>
@@ -530,7 +584,7 @@
                     <!-- start NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
                     <div class="col-sm-12" id="btnManagerLogInDiv">
-                        <button id="btnManagerLogIn" class="btn btn-primary btn-block" onclick="document.getElementById('id01').style.display='block'" >Manager Log In</button>
+                        <button id="btnManagerLogIn" class="btn btn-primary btn-block" onclick="document.getElementById('id01').style.display='block'">Manager Log In</button>
                     </div>
 
                     <!--end NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
@@ -575,8 +629,23 @@
         </form>
     </div>
 
-    <!--end NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
+    <!-- NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
+    <!-- log in html-->
+
+    <div class="container">
+        <div class="main">
+            <h2>כניסת מנהל אתר</h2>
+            <form id="form_id" method="post" name="myform">
+                <label>User Name :</label>
+                <input type="text" name="username" id="username" />
+                <label>Password :</label>
+                <input type="password" name="password" id="password" />
+                <input type="button" value="Login" id="submit" onclick="validate()" />
+            </form>
+            
+        </div>
+    </div>
 
     <div id="editDiv">
         <div id="showID">ID</div>

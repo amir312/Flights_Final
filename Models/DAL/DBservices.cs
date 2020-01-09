@@ -6,7 +6,8 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Data;
 using System.Text;
-using HW3.Models;
+
+using Flight_Final.Models;
 
 /// <summary>
 /// DBServices is a class created by me to provides some DataBase Services
@@ -628,6 +629,58 @@ public class DBservices
             }
         }
         return FullList;
+    }
+    public List<signin> getusers()
+    {
+        List<signin> users = new List<signin>();
+        SqlConnection con = null;
+
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT * FROM Signintable";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr2 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr2.Read())
+            {   // Read till the end of the data into a row
+                signin u = new signin();
+
+                u.Username = (string)dr2["username"];
+                u.Password = (string)dr2["password"];
+
+                users.Add(u);
+               
+
+
+
+            }
+            dr2.Close();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+        return users;
     }
 }
 
