@@ -74,7 +74,7 @@ namespace HW3.Models
             DBservices dbs1 = new DBservices();
             //FullRoutes = dbs1.GetRoutes();
             //return dbs.GetFlightRoute(FullList, FullRoutes);
-            return null;
+            return FullList;
 
 
 
