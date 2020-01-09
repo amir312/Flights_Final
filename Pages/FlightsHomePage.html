@@ -396,10 +396,7 @@
             var airlinesToSplit = document.getElementById(`airlines${index}`).textContent;
             var res1 = airlinesToSplit.split(" ", 2);
             var res2 = res1[1].split(",", 1);
-            
-
-
-
+            var res3 = res2.toString();
 
             var myflt = {
 
@@ -409,23 +406,13 @@
                 "flyTo": mydata[index].cityCodeTo,
                 "departDate": document.getElementById(`dip_date${index}`).textContent,
                 "returnDate": document.getElementById(`arr_date${index}`).textContent,
-                "airlines": res2,
+                "airlines": res3,
 
-                //"routes": routsArr[index].cities
+               
             }
-            //var myroutes = [];
-            //for (var i = 0; i < routsArr[index].code.length; i++) {
-            //      myroutes[i] = {
-            //      "i": i,
-            //        "city": routsArr[index].cities[i],
-            //        "code": routsArr[index].code[i],
-            //        "id":routsArr[index].id
-
-            //}
-            //}
+           
             console.log(myflt);
             ajaxCall("POST", "../api/Flights", JSON.stringify(myflt), postMyFltSuccess, postMyFltError);
-            //ajaxCall("POST", "../api/Route", JSON.stringify(myroutes), postMyFltSuccess, postMyFltError);
         }
 
         function postMyFltSuccess(data) {
