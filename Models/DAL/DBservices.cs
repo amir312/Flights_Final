@@ -148,9 +148,9 @@ public class DBservices
         String command;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}')", flight.Id, flight.Price.ToString(), flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate);
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}','{6}')", flight.Id, flight.Price.ToString(), flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate, flight.Airlines);
         // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO MyFlights " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time ) ";
+        String prefix = "INSERT INTO MyFlights " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time,Airlines ) ";
         command = prefix + sb.ToString();
 
         return command;
@@ -165,8 +165,9 @@ public class DBservices
 
         StringBuilder sb = new StringBuilder();
         sb.AppendFormat("Values('{0}', '{1}', '{2}')", flight.FlightID, flight.FullName, flight.Email);
+
         // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO Ordered_Flights " + "(Flight_ID,Full_Name, Email) ";
+        String prefix = "INSERT INTO Ordered_Flights " + "(Flight_ID,Full_Name,Passenger_Email) ";
         command = prefix + sb.ToString();
 
         return command;
@@ -337,6 +338,7 @@ public class DBservices
     {
         List<Flight> FlightList = new List<Flight>();
         SqlConnection con = null;
+       
 
         try
         {
@@ -367,7 +369,10 @@ public class DBservices
                 f.DepartDate = (string)dr2["Arrival_Time"];
                 f.ReturnDate = (string)dr2["Departure_Time"];
                 f.Price = float.Parse(dr2["Price"].ToString());
-           //
+                f.Airlines = (string)dr2["Airlines"];
+                
+                
+
                 f.Routes = new List<string>();
              //
                 FlightList.Add(f);
