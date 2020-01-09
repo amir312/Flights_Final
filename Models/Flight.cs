@@ -35,7 +35,7 @@ namespace HW3.Models
         {
             Id = id;
             Price = price;
-            FlyFrom = flyFrom;
+            FlyFrom = flyfrom;
             FlyTo = flyto;
             DepartDate = departdate;
             ReturnDate = returedate;
