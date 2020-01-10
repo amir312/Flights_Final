@@ -1,4 +1,4 @@
-﻿﻿﻿﻿
+﻿﻿﻿﻿﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +16,7 @@
 
     <!--NEW -Form Animation -  Currently not working on CSS-->
     <style>
+
 
 
 
@@ -161,32 +162,15 @@
 
     <script>
         $(document).ready(function () {
+            ///localStorage.clear();  ///to claer the localstorage
             $("#searchBTN").click(getFlightFunc);
             $("#MyflightBTN").click(getmyflightsList);
-            //$("#ConBTN").click(ShowFilter);
             mydata = [];
             url = "https://api.skypicker.com/locations?type=dump&locale=en-US&location_types=airport&limit=4000&active_only=true&sort=name";
             $.get(url).done(getDestinations);
             $.get(url).fail(errorCB);
             $("#editDiv").hide();
         });
-
-        //start  NEW NEW NEW NEW NEW NEW NEW NEW NEW
-
-        // Get the modal
-        //var modal = document.getElementById('id01');
-        //var airline1;
-        //var flyfrom1;
-        //var flyto1;
-        // When the user clicks anywhere outside of the modal, close it
-
-        //window.onclick = function (event) {
-        //    if (event.target == modal) {
-        //        modal.style.display = "none";
-        //    }
-        //}
-
-        //end  NEW NEW NEW NEW NEW NEW NEW NEW NEW
 
         function errorCB(err) {
             console.log(err);
@@ -228,9 +212,6 @@
             returnDate = Tday + "/" + Tmonth + "/" + Tyear
             /////////////////////////////////////////////////////////END/
             ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
-            /////////////////////////////////////////////
-            //ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
-            ////////////////////////////////////////////
         }
 
         function DataGenertor(data) {
@@ -238,7 +219,7 @@
             data = data.data;
             mydata = data;
             console.log(mydata);
-            routsArr = [];
+            clickfaivoriate = []
             ShowData(data);
         }
 
@@ -247,62 +228,41 @@
         function ShowData(data) {
             document.getElementById('result').innerHTML = "";
             for (var i = 0; i < data.length; i++) {
+                clickfaivoriate[i] = true;
                 str = '';
                 str = `
-                                    <div id="FlightsDiv">
-                                    <h1>Flight Details:</h1>
-                                    <div id="id${i}"> ${data[i].id}</div>
+                                        <div id="FlightsDiv">
+                                        <h1>Flight Details:</h1>
+                                        <div id="id${i}"> ${data[i].id}</div>
 
-                                    <table class="table table-hover">
-                                    <thead>
+                                        <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                            <th> Price </th>
+                                            <th> Departure </th>
+                                            <th> Arrival Time </th>
+                                            <th> Departure City </th>
+                                            <th> Arrival City </th>
+                                            <th> Airlines </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
                                         <tr>
-                                        <th> Price </th>
-                                        <th> Departure </th>
-                                        <th> Arrival Time </th>
-                                        <th> Departure City </th>
-                                        <th> Arrival City </th>
-                                        <th> Airlines </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                    <td id="price${i}"> ${data[i].conversion.EUR} € </td>
-                                    <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
-                                    <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
-                                    <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
-                                    <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                                    <td id="airlines${i}"> ${data[i].airlines} </td>
-                                    </tr>
-                                    </tbody>
+                                        <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                        <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                        <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                        <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                        <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                        <td id="airlines${i}"> ${data[i].airlines} </td>
+                                        </tr>
+                                        </tbody>
 
-                                    </table>`;
+                                        </table>`;
 
-                //var RoutesConnection = {
-                //    "i": i,
-                //    "cities": [],
-                //    "code": [],
-                //    "id":data[i].id
-                //}
                 departuretime = new Date(data[i].dTimeUTC * 1000);
                 arrivaltime = new Date(data[i].aTimeUTC * 1000);
-                //הדפסת פירוט הקונקשנים של הטיסה
-                //for (var j = 0; j < data[i].route.length; j++) {
-                //    str += `
-                //                    <div id="subflights${i}">
-                //                    <h2>Connection Flight No.${j + 1}:</h2>
-                //                    <div>${data[i].route[j].cityFrom}</div>
-                //                    <div>${data[i].route[j].cityTo}</div>
-                //                    <div>${new Date(data[i].route[j].dTimeUTC * 1000)}</div>
-                //                    <div>${new Date(data[i].route[j].aTimeUTC * 1000)}</div>
-                //                    <div>${data[i].route[j].flight_no}</div>
-                //                    </div>`;
-                //    RoutesConnection.cities.push(data[i].route[j].cityTo);
-                //    RoutesConnection.code.push(data[i].route[j].cityCodeTo);
-
-                //}
-                //routsArr.push(RoutesConnection);
-                str += `<button type="button" id="${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
-                str += `<button type="button" id="${i}" onclick="orderNow(${i})">Order Now</button>`;
+                str += `<button type="button" id="add${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
+                str += `<button type="button" id="order${i}" onclick="orderNow(${i})">Order Now</button>`;
                 str += `</div>`;
                 document.getElementById('result').innerHTML += str;
             }
@@ -340,7 +300,7 @@
                 email: mail,
                 airline: airline1,
                 flyFrom: flyfrom1,
-                flyTo:flyto1
+                flyTo: flyto1
             };
             console.log(OrderdFlight);
             ajaxCall("POST", "../api/OrderFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
@@ -371,113 +331,103 @@
                 "departDate": document.getElementById(`dip_date${index}`).textContent,
                 "returnDate": document.getElementById(`arr_date${index}`).textContent,
                 "airlines": res3,
-
-
             }
 
-            console.log(myflt);
-            ajaxCall("POST", "../api/Flights", JSON.stringify(myflt), postMyFltSuccess, postMyFltError);
+
+
+            if (clickfaivoriate[index] == true) {
+                document.getElementById(`add${index}`).style.background = "#db0f13";
+                document.getElementById(`add${index}`).innerHTML = "";
+                document.getElementById(`add${index}`).innerHTML = "Cancel Favorite";
+                clickfaivoriate[index] = false;
+                localStorage.setItem(`${mydata[index].cityCodeFrom}myfivorite${index}`, JSON.stringify(myflt));
+            }
+            else {
+                document.getElementById(`add${index}`).style.background = "#4CAF50";
+                document.getElementById(`add${index}`).innerHTML = "";
+                document.getElementById(`add${index}`).innerHTML = "Add To Favoriate";
+                clickfaivoriate[index] = true;
+                localStorage.removeItem(`${mydata[index].cityCodeFrom}myfivorite${index}`);
+            }
+            x = localStorage.getItem(`${mydata[index].cityCodeFrom}myfivorite${index}`);
+            x = JSON.parse(x);
+            setTimeout(function () {
+                if (x != null) {
+                    console.log(x);
+                    ajaxCall("POST", "../api/Flights", JSON.stringify(x), postMyFltSuccess, postMyFltError);
+
+                }
+            }, 6000);
+
+
         }
 
         function postMyFltSuccess(data) {
-            console.log(data);
+            console.log("Posted sucsses");
+
         }
         function postMyFltError(err) {
             console.log(err);
         }
-
+        // show my fivorite from local storge
         function getmyflightsList() {
-            ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
-        }
 
-        //build my favorite //
-        function getMyFlightsSuccess(data) {
-            console.log(data);
+            value = []
+            // iterate localStorage
+            for (var i = 0; i < localStorage.length; i++) {
 
+                // set iteration key name
+                var key = localStorage.key(i);
+
+
+
+                // use key name to retrieve the corresponding value
+                try {
+                    value[i] = JSON.parse(localStorage.getItem(key));
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
             document.getElementById('result').innerHTML = "";
             str = `    <h1>Flight Details:</h1>
-                                        <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th> Price </th>
-                                        <th> Departure </th>
-                                        <th> Arrival Time </th>
-                                        <th> Departure City </th>
-                                        <th> Arrival City </th>
-                                        <th> Airlines </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>`;
-            for (var i = 0; i < data.length; i++) {
-                // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
+                                            <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                            <th>#</th>
+                                            <th> Price </th>
+                                            <th> Departure </th>
+                                            <th> Arrival Time </th>
+                                            <th> Departure City </th>
+                                            <th> Arrival City </th>
+                                            <th> Airlines </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>`;
+            for (var i = 0; i < value.length; i++) {
                 str += `
-
-                                    <tr>
-
-                                    <td>${i + 1}</td>
-                                    <td id="price${i}"> ${data[i].Price} € </td>
-                                    <td id="departDate${i}"> ${data[i].DepartDate} </td>
-                                    <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
-                                    <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
-                                    <td id="flyTo${i}"> ${data[i].FlyTo} </td>
-                                    <td id="airlines${i}"> ${data[i].Airlines} </td>
-
-                                    </tr>
-                                    </tbody>`
-
+                                        <tr>
+                                        <td>${i + 1}</td>
+                                        <td id="price${i}"> ${value[i].price} € </td>
+                                        <td id="departDate${i}"> ${value[i].departDate} </td>
+                                        <td id="returnDate${i}"> ${value[i].returnDate} </td>
+                                        <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
+                                        <td id="flyTo${i}"> ${value[i].flyTo} </td>
+                                        <td id="airlines${i}"> ${value[i].airlines} </td>
+                                        </tr>
+                                        </tbody>`
             }
             str += `</table>`;
-            document.getElementById('result').innerHTML += str;
+            document.getElementById('result').innerHTML += str;      
         }
 
-        function getMyFlightsError(err) {
-            console.log(err);
-        }
-        //setup log in//////
-
-        //var users;
-        //ajaxCall('GET', "../api/signin", "", Signinsuccess, SigninError)
-        //function Signinsuccess(data) {
-        //    console.log(data)
-        //    users = data;
-
-        //}
-
-        //function SigninError(data) {
-        //    alert("something happend with sginIn" + data);
-        //}
-        //var attempt = 3; // Variable to count number of attempts.
-        //// Below function Executes on click of login button.
-        //function validate() {
-        //    console.log(users);
-        //    var username = document.getElementById("username").value;
-        //    var password = document.getElementById("password").value;
-        //    if (users.find(element => element.Username == username && password == element.Password)) {
-        //        alert("Login successfully");
-        //        getmyflightsList();
-        //        //window.location = "success.html"; // Redirecting to other page.
-        //        return false;
-        //    }
-        //    else {
-        //        attempt--;// Decrementing by one.
-        //        alert("You have left " + attempt + " attempt;");
-        //        // Disabling fields after 3 attempts.
-        //        if (attempt == 0) {
-        //            document.getElementById("username").disabled = true;
-        //            document.getElementById("password").disabled = true;
-        //            document.getElementById("submit").disabled = true;
-        //            return false;
-        //        }
-        //    }
-        //}
     </script>
 </head>
 
 <body>
 
     <div class="topnav">
-        <a class="active" href="#home">Home</a>
+        <a class="active" href="FlightsHomePage.html">Home</a>
         <a href="LoginManagerPage.html">Manager Login</a>
     </div>
 
@@ -497,16 +447,6 @@
                         </p>
                         <input type="text" class="form-control" placeholder="Country, city or airport" id="flytoinput" value="NYC">
                     </div>
-                    <!--<div class="row">
-                        <div class="col-sm-12">
-                            <p>
-                                Show With Connections
-                            </p>
-                            <input type="text" class="form-control" name="Dest" id="Set_Connection"><br>
-
-                            <input type="button" class="btn btn-primary btn-block" value="Show With Connections" id="ConBTN" />
-                        </div>
-                    </div>-->
                 </div>
 
                 <div class="row" id="dateDIV">
@@ -519,7 +459,7 @@
                         <p>
                             Return
                         </p>
-                        <input type="date" class="form-control" placeholder="Return" id="returninput" value="2020-05-28">
+                        <input type="date" class="form-control" placeholder="Return" id="returninput" value="2020-05-25">
                     </div>
 
                 </div>
@@ -532,15 +472,6 @@
                     <div class="col-sm-12" id="btnMyflightDiv">
                         <button type="button" class="btn btn-primary btn-block" id="MyflightBTN">My Favorites</button>
                     </div>
-
-                    <!-- start NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
-
-                    <!--<div class="col-sm-12" id="btnManagerLogInDiv">
-                        <button id="btnManagerLogIn" class="btn btn-primary btn-block" onclick="document.getElementById('id01').style.display='block'">Manager Log In</button>
-                    </div>-->
-
-                    <!--end NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
-
                 </div>
             </div>
 
@@ -550,38 +481,7 @@
         </div>
     </div>
 
-    <!-- start NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
 
-    <!--<div id="id01" class="modal">
-        <form class="modal-content animate" action="/action_page.php" method="post">
-            <div class="imgcontainer">
-                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                <h3>Flight Information System - ANT</h3>
-                <h6>Manager Access</h6>
-            </div>
-
-            <div class="container">
-                <label for="uname"><b>Username</b></label>
-                <input id="inputUname" type="text" placeholder="Enter Username" name="uname" required>
-
-                <label for="psw"><b>Password</b></label>
-                <input id="pswInput" type="password" placeholder="Enter Password" name="psw" required>
-
-                <button type="button" onclick="CheckLogIn()">Login</button>
-                <label>
-                    <input type="checkbox" checked="checked" name="remember"> Remember me
-                </label>
-            </div>
-
-            <div class="container" style="background-color:#f1f1f1">
-                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                <span class="psw">Forgot <a href="#">password?</a></span>
-            </div>
-        </form>
-    </div>-->
-
-    <!-- NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW  NEW NEW -->
-    <!-- log in html-->
 
 
     <div id="editDiv">
