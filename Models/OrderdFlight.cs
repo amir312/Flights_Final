@@ -7,6 +7,10 @@ namespace HW3.Models
 {
     public class OrderdFlight
     {
+        public static List<OrderdFlight> OrderdflightList = new List<OrderdFlight>();
+        public static List<OrderdFlight> OrderdfiteredList = new List<OrderdFlight>();
+
+
         string flightID;
         string fullName;
         string email;
@@ -14,6 +18,7 @@ namespace HW3.Models
         string flyfrom;
         string flyto;
 
+        public OrderdFlight() { }
 
         public OrderdFlight(string flightID, string fullName, string email, string airline, string flyfrom, string flyto)
         {
@@ -25,7 +30,7 @@ namespace HW3.Models
             this.flyto = flyto;
         }
 
-        public OrderdFlight() { }
+     
         public string FlightID { get => flightID; set => flightID = value; }
         public string FullName { get => fullName; set => fullName = value; }
         public string Email { get => email; set => email = value; }
@@ -42,14 +47,14 @@ namespace HW3.Models
 
 
 
-        public List<OrderdFlight> getOrderdflights()
+        public  List<OrderdFlight> getOrderdflights()
         {
-            List<OrderdFlight> Orderd_List = new List<OrderdFlight>();
+            List<OrderdFlight> orderd_List = new List<OrderdFlight>();
 
             DBservices dbs = new DBservices();
-            Orderd_List = dbs.getOrderdflightsDB();
+            orderd_List = dbs.getOrderdflightsDB();
      
-            return Orderd_List;
+            return orderd_List;
 
 
 
