@@ -654,7 +654,8 @@ public class DBservices
                 u.Flyto = (string)dr2["flyto"];
                 u.Startdate = (string)dr2["startdate"];
                 u.Finishdate = (string)dr2["finishdate"];
-                u.Discount = (float)dr2["discount"];
+                u.Discount = (decimal)dr2["discount"];
+                u.Id = (int)dr2["ID"];
 
                 discounts.Add(u);
             }
