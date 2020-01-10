@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Flight_Final.Models
+namespace HW3.Models
 {
     public class Destination
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Flight_Final.Controllers
+namespace HW3.Controllers
 {
     public class HomeController : Controller
     {

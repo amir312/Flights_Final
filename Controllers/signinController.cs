@@ -4,10 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Flight_Final.Models;
+using HW3.Models;
 
-
-namespace Flight_Final.Controllers
+namespace HW3.Controllers
 {
     public class signinController : ApiController
     {
@@ -15,7 +14,7 @@ namespace Flight_Final.Controllers
         public List<signin> Get()
         {
             signin s = new signin();
-            
+
             return s.getusers();
         }
 
@@ -30,6 +29,6 @@ namespace Flight_Final.Controllers
         {
         }
 
-        
+
     }
 }

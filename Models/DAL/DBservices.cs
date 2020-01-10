@@ -6,8 +6,7 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Data;
 using System.Text;
-
-using Flight_Final.Models;
+using HW3.Models;
 
 /// <summary>
 /// DBServices is a class created by me to provides some DataBase Services
@@ -115,10 +114,7 @@ public class DBservices
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            //for (int i = 0; i < flight.Routes.Count; i++)
-            //{
-            //    cStr = BuildInsertCommandRoute(flight.Id,flight,;
-            //}
+
             return numEffected;
 
         }
@@ -151,7 +147,7 @@ public class DBservices
         StringBuilder sb = new StringBuilder();
         sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}','{6}')", flight.Id, flight.Price.ToString(), flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate, flight.Airlines);
         // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO MyFlights " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time,Airlines ) ";
+        String prefix = "INSERT INTO All_Favorites " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time,Airlines ) ";
         command = prefix + sb.ToString();
 
         return command;
@@ -165,10 +161,10 @@ public class DBservices
         String command;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendFormat("Values('{0}', '{1}', '{2}')", flight.FlightID, flight.FullName, flight.Email);
+        sb.AppendFormat("Values('{0}', '{1}', '{2}','{3}','{4}','{5}')", flight.FlightID, flight.FullName, flight.Email, flight.Airline, flight.Flyfrom, flight.Flyto);
 
         // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO Ordered_Flights " + "(Flight_ID,Full_Name,Passenger_Email) ";
+        String prefix = "INSERT INTO Ordered_Flights " + "(Flight_ID,Full_Name,Passenger_Email,Airline,FlyFrom,FlyTo) ";
         command = prefix + sb.ToString();
 
         return command;
@@ -333,13 +329,12 @@ public class DBservices
 
         return command;
     }
-    //////////////////////////////////////////////////////////////////////////////////////////
 
-    public List<Flight> getMYflight()
+    public List<OrderdFlight> getOrderdflightsDB()
     {
-        List<Flight> FlightList = new List<Flight>();
+        List<OrderdFlight> OrderdFlightList = new List<OrderdFlight>();
         SqlConnection con = null;
-       
+
 
         try
         {
@@ -352,7 +347,63 @@ public class DBservices
         }
         try
         {
-            String selectSTR = "SELECT * FROM MyFlights";
+            String selectSTR = "SELECT * FROM Ordered_Flights";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr2 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr2.Read())
+            {   // Read till the end of the data into a row
+                OrderdFlight order = new OrderdFlight();
+
+                order.FlightID = (string)dr2["Flight_ID"];
+                order.FullName = (string)dr2["Full_Name"];
+                order.Email = (string)dr2["Passenger_Email"];
+                order.Airline = (string)dr2["Airline"];
+                order.Flyfrom = (string)dr2["FlyFrom"];
+                order.Flyto = (string)dr2["FlyTo"];
+
+                OrderdFlightList.Add(order);
+            }
+            dr2.Close();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+        return OrderdFlightList;
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    public List<Flight> getMYflight()
+    {
+        List<Flight> FlightList = new List<Flight>();
+        SqlConnection con = null;
+
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT * FROM All_Favorites";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
@@ -362,7 +413,7 @@ public class DBservices
             {   // Read till the end of the data into a row
                 Flight f = new Flight();
                 /////
-              /// f.Routes = 
+                /// f.Routes = 
                 /////
                 f.Id = (string)dr2["Id"];
                 f.FlyFrom = (string)dr2["Arrival_City"];
@@ -371,11 +422,11 @@ public class DBservices
                 f.ReturnDate = (string)dr2["Departure_Time"];
                 f.Price = float.Parse(dr2["Price"].ToString());
                 f.Airlines = (string)dr2["Airlines"];
-                
-                
+
+
 
                 f.Routes = new List<string>();
-             //
+                //
                 FlightList.Add(f);
             }
             dr2.Close();
@@ -395,128 +446,13 @@ public class DBservices
         return FlightList;
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    //public List<Route> GetRoutes()
-    //{
-    //    List<Route> RouteList = new List<Route>();
-    //    SqlConnection con = null;
 
-    //    try
-    //    {
-    //        con = connect("DBConnectionString"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-    //    try
-    //    {
-    //        String selectSTR = "SELECT * FROM Routes";
-    //        SqlCommand cmd = new SqlCommand(selectSTR, con);
 
-    //        // get a reader
-    //        SqlDataReader dr2 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
 
-    //        while (dr2.Read())
-    //        {   // Read till the end of the data into a row
-    //            Route r = new Route();
 
-    //            r.Id = (string)dr2["Id"];
-    //            r.I = (string)dr2["I"];
-    //            r.Code = (string)dr2["Code"];
-    //            r.City = (string)dr2["City"];
-    //            //f.Route = new List<string>();
-    //            RouteList.Add(r);
-    //        }
-    //        dr2.Close();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            con.Close();
-    //        }
-    //    }
-    //    return RouteList;
-    //}
 
-    
-     
 
-    //public List<Flight> GetFlightRoute(List<Flight> FullList,List<Route> FullRoutes)
-    //{
 
-    //    SqlConnection con = null;
-    //    String selectSTR = "";
-    //    SqlCommand cmd;
-        
-    //    try
-    //    {
-    //        con = connect("DBConnectionString"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-    //    try
-    //    {
-            
-    //        for (int i = 0; i < FullList.Count; i++)
-    //        {
-    //            int x = 0;
-    //            for (int j = 0; j < FullRoutes.Count; j++)
-    //            {
-    //                if (FullList[i].Id == FullRoutes[j].Id)
-    //                {
-
-    //                    selectSTR = $@"SELECT * 
-    //                               FROM Routes
-    //                               where Id='{FullList[i].Id}' and I='{FullRoutes[j].I}'";
-
-    //                    cmd = new SqlCommand(selectSTR, con);
-
-    //                    // get a reader
-    //                    SqlDataReader dr3 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
-    //                    while (dr3.Read())
-    //                    {   // Read till the end of the data into a row
-
-    //                        FullList[i].Routes.Add((string)dr3["City"]);
-
-    //                    }
-    //                    dr3.Close();
-    //                }
-    //            }
-                
-                
-    //        }
-            
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            con.Close();
-    //        }
-    //    }
-    //    return FullList;
-    //}
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="city"></param>
-    /// <returns></returns>
     public List<Flight> get_flight_by_connection(string city)
     {
         List<Flight> FlightList = new List<Flight>();
@@ -534,10 +470,10 @@ public class DBservices
         try
         {
             String selectSTR = $@"select *
-                                  from [dbo].[MyFlights]
+                                  from [dbo].[All_Favorites]
                                   where Id in (
                                   select  R.Id
-                                  from  [dbo].[MyFlights] F inner join [dbo].[Routes] R on F.Id=R.Id
+                                  from  [dbo].[All_Favorites] F inner join [dbo].[Routes] R on F.Id=R.Id
                                   where R.City='{city}')";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -557,7 +493,7 @@ public class DBservices
                 f.Routes = new List<string>();
                 FlightList.Add(f);
 
-                
+
             }
             dr4.Close();
         }
@@ -630,6 +566,9 @@ public class DBservices
         }
         return FullList;
     }
+
+
+
     public List<signin> getusers()
     {
         List<signin> users = new List<signin>();
@@ -661,7 +600,7 @@ public class DBservices
                 u.Password = (string)dr2["password"];
 
                 users.Add(u);
-               
+
 
 
 
@@ -682,6 +621,8 @@ public class DBservices
         }
         return users;
     }
+
+
+
+
 }
-
-

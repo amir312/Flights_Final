@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Flight_Final.Models;
+using HW3.Models;
 
 namespace HW3.Controllers
 {
@@ -16,13 +16,8 @@ namespace HW3.Controllers
         // GET api/<controller>
         public IEnumerable<Flight> Get()
         {
-            //return new string[] { "value1", "value2" };
-            //   Flight flt1 = new Flight();
-            // return flt1.getFlight();
-           
                 Flight flight = new Flight();
-                    return flight.getMYflights();
-          
+                return flight.getMYflights();
         }
 
 

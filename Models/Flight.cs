@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Flight_Final.Models
+namespace HW3.Models
 {
     public class Flight
     {
@@ -35,7 +35,7 @@ namespace Flight_Final.Models
         {
             Id = id;
             Price = price;
-            FlyFrom = flyFrom;
+            FlyFrom = flyfrom;
             FlyTo = flyto;
             DepartDate = departdate;
             ReturnDate = returedate;
@@ -66,11 +66,14 @@ namespace Flight_Final.Models
         public List<Flight> getMYflights()
         {
             List<Flight> FullList = new List<Flight>();
-           
+            //List<Route> FullRoutes = new List<Route>();
+
             DBservices dbs = new DBservices();
             FullList = dbs.getMYflight();
           
-           
+            DBservices dbs1 = new DBservices();
+            //FullRoutes = dbs1.GetRoutes();
+            //return dbs.GetFlightRoute(FullList, FullRoutes);
             return FullList;
 
 

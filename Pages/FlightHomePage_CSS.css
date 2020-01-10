@@ -185,7 +185,9 @@ span.psw {
     }
 }
 
-/* logm in css*/
+
+
+
 /* Below line is used for online Google font */
 @import url(http://fonts.googleapis.com/css?family=Raleway);
 
@@ -276,4 +278,4 @@ input[type=button] {
 
     input[type=button]:hover {
         background: linear-gradient(#ffdd7f 5%, #ffbc00 100%);
-    }
+    } 
