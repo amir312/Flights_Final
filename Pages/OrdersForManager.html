@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Favorties For Manager</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link href="FlightHomePage_CSS.css" rel="stylesheet" />
+
+    <script src="../Scripts/AJAXcall.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            getmyflightsList();
+
+        });
+
+        function getmyflightsList() {
+            ajaxCall("GET", "../api/OrderdFlight", "", getMyFlightsSuccess, getMyFlightsError);
+
+        }
+
+        function getMyFlightsSuccess(ordersdata) {
+            AllFavorites = ordersdata; // keep the cars array in a global variable;
+            try {
+                tbl = $('#OrdersTable').DataTable({
+                    data: ordersdata,
+                    pageLength: 6,
+                    columns: [
+                       
+                        { data: "FlightID" },
+                        { data: "FullName" },
+                        { data: "Email" },
+                        { data: "Airline" },
+                        { data: "Flyfrom" },
+                        { data: "Flyto" },
+
+                    ],
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+
+     
+
+        function getMyFlightsError(err) {
+            console.log(err);
+        }
+
+    </script>
+</head>
+<body>
+
+    <div class="topnav">
+        <a class="active" href="FlightsHomePage.html">Log Out</a>
+        <a href="FavoritesForManager.html">Show Favorites Flights</a>
+        <a href="manager_ShowOrderd_flights.html">Show Ordered Flights</a>
+    </div>
+
+    <div class="container-fluid">
+        <p> </p>
+        <p></p>
+        <form id="pForm">
+            <table id="OrdersTable" class="display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>fullName</th>
+                        <th>email</th>
+                        <th>airline</th>
+                        <th>flyfrom</th>
+                        <th>flyto</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </form>
+    </div>
+
+
+
+</body>
+</html>
