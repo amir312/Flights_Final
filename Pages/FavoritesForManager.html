@@ -1,11 +1,31 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <title>Favorties For Manager</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
     <link href="FlightHomePage_CSS.css" rel="stylesheet" />
     <script src="../Scripts/AJAXcall.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
 
     <script>
 
@@ -19,55 +39,103 @@
             ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
         }
 
-        function getMyFlightsSuccess(data) {
-            console.log(data);
+        function getMyFlightsSuccess(Favoritesdata) {
+            AllFavorites = Favoritesdata; // keep the cars array in a global variable;
+            try {
+                tbl = $('#FavoritesTable').DataTable({
+                    data: Favoritesdata,
+                    pageLength: 5,
+                    columns: [
+                        {
+                            //render: function (data, type, row, meta) {
+                            //    let dataCar = "data-Id='" + row.Id + "'";
 
-            document.getElementById('result').innerHTML = "";
-            str = `    <h1>All Favorites Flights:</h1>
-                                                    <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                    <th>#</th>
-                                                    <th> Price </th>
-                                                    <th> Departure </th>
-                                                    <th> Arrival Time </th>
-                                                    <th> Departure City </th>
-                                                    <th> Arrival City </th>
-                                                    <th> Airlines </th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>`;
-            for (var i = 0; i < data.length; i++) {
-                // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
-                str += `
+                            //    editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCar + "> Edit </button>";
+                            //    viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCar + "> View </button>";
+                            //    deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + dataCar + "> Delete </button>";
+                            //    return editBtn + viewBtn + deleteBtn;
+                            //}
+                        },
+                        { data: "Id" },
+                        { data: "Airlines" },
+                        { data: "FlyFrom" },
+                        { data: "FlyTo" },
+                        { data: "Price" },
+                        { data: "DepartDate" },
+                        { data: "ReturnDate" },
 
-                                                <tr>
-
-                                                <td>${i + 1}</td>
-                                                <td id="price${i}"> ${data[i].Price} € </td>
-                                                <td id="departDate${i}"> ${data[i].DepartDate} </td>
-                                                <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
-                                                <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
-                                                <td id="flyTo${i}"> ${data[i].FlyTo} </td>
-                                                <td id="airlines${i}"> ${data[i].Airlines} </td>
-
-                                                </tr>
-                                                </tbody>`
-
+                        //{
+                        //  data: "Automatic",
+                        //  render: function (data, type, row, meta) {
+                        //    if (data == true)
+                        //        return '<input type="checkbox" checked disabled="disabled" />';
+                        //    else
+                        //        return '<input type="checkbox" disabled="disabled"/>';
+                        //    }
+                        //},
+                        //{
+                        //    data: "Description",
+                        //    visible: false
+                        //},
+                        //{
+                        //    data: "Image",
+                        //    visible: false
+                        //}
+                    ],
+                });
+                //buttonEvents();
             }
-            str += `</table>`;
-            document.getElementById('result').innerHTML += str;
+
+            catch (err) {
+                alert(err);
+            }
         }
+
+        //function getMyFlightsSuccess(data) {
+        //    console.log(data);
+
+        //    document.getElementById('result').innerHTML = "";
+        //    str = `    <h1>All Favorites Flights:</h1>
+        //                       <table id="Favorites_Table" class="table table-hover">
+        //                        <thead>
+        //                          <tr>
+        //                           <th>#</th>
+        //                           <th> Price </th>
+        //                           <th> Departure </th>
+        //                           <th> Arrival Time </th>
+        //                           <th> Departure City </th>
+        //                           <th> Arrival City </th>
+        //                           <th> Airlines </th>
+        //                          </tr>
+        //                         </thead>
+        //                         <tbody>`;
+        //    for (var i = 0; i < data.length; i++) {
+        //        // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
+        //        str += `
+
+        //                              <tr>
+
+        //                              <td>${i + 1}</td>
+        //                              <td id="price${i}"> ${data[i].Price} € </td>
+        //                              <td id="departDate${i}"> ${data[i].DepartDate} </td>
+        //                              <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
+        //                              <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
+        //                              <td id="flyTo${i}"> ${data[i].FlyTo} </td>
+        //                              <td id="airlines${i}"> ${data[i].Airlines} </td>
+
+        //                               </tr>
+        //                          </tbody>`
+
+        //    }
+        //    str += `</table>`;
+        //    document.getElementById('result').innerHTML += str;
+        //}
 
         function getMyFlightsError(err) {
             console.log(err);
         }
 
     </script>
-
-
-    <meta charset="utf-8" />
-    <title>Favorties For Manager</title>
 </head>
 <body>
 
@@ -77,8 +145,32 @@
         <a href="manager_ShowOrderd_flights.html">Show Ordered Flights</a>
     </div>
 
-    <div class="col-sm-12">
-        <div id="result"></div>
+    <div class="container-fluid">
+        <p> </p>
+        <p></p>
+        <form id="pForm">
+            <table id="FavoritesTable" class="display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Id</th>
+                        <th>Airlines</th>
+                        <th>Fly From</th>
+                        <th>Fly To</th>
+                        <th>Price</th>
+                        <th>DepartDate</th>
+                        <th>ReturnDate</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </form>
     </div>
+
+
+
+    <!--<div class="col-sm-12">
+        <div id="result"></div>
+    </div>-->
 </body>
 </html>
