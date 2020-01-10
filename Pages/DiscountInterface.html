@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 
-    <link href="FlightHomePage_CSS.css" rel="stylesheet" />
+    <!--<link href="FlightHomePage_CSS.css" rel="stylesheet" />-->
     <script src="../Scripts/AJAXcall.js"></script>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
@@ -21,6 +21,24 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <style type="text/css">
+
+        button {
+            margin-left: 10px;
+        }
+
+        .colorDiv {
+            height: 30px;
+            width: 70px;
+            border: 2px solid black
+        }
+
+        #newBTN {
+            background-color: blueviolet;
+            margin-bottom: 10px;
+        }
+    </style>
 
     <script>
 
@@ -65,14 +83,14 @@
                 populateFields(this.getAttribute('data-carId')); // fill the form fields according to the selected row
             });
 
-            $(document).on("click", ".viewBtn", function () {
-                mode = "view";
-                markSelected(this);
-                $("#editDiv").show();
-                row.className = 'selected';
-                $("#editDiv :input").attr("disabled", "disabled"); // view mode: disable all controls in the form
-                populateFields(this.getAttribute('data-carId'));
-            });
+            //$(document).on("click", ".viewBtn", function () {
+            //    mode = "view";
+            //    markSelected(this);
+            //    $("#editDiv").show();
+            //    row.className = 'selected';
+            //    $("#editDiv :input").attr("disabled", "disabled"); // view mode: disable all controls in the form
+            //    populateFields(this.getAttribute('data-carId'));
+            //});
 
             $(document).on("click", ".deleteBtn", function () {
                 mode = "delete";
@@ -86,7 +104,7 @@
                     dangerMode: true
                 })
                     .then(function (willDelete) {
-                        if (willDelete) DeleteDiscount(ID);
+                        if (willDelete) DeleteDiscount(Id);
                         else swal("Not Deleted!");
                     });
             });
@@ -107,64 +125,52 @@
         function onSubmitFunc() {
 
             var Id = -1;
-            var Image = "car.jpg";
             if (mode == "edit") {
-                Id = car.Id;
-                Image = car.Image;
+                Id = discount.Id;
             }
 
-
-            let cartoSave = {
-                Id: Id,
-                Image: Image, // for now we do not change the image
-                Manufacturer: $("#manufacturer").val(),
-                Model: $("#model").val(),
-                Year: $("#year").val(),
-                Price: $("#price").val(),
-                Color: $("#color").val(),
-                Hand: $("#hand").val(),
-                Description: $("#description").val(),
-                Automatic: $("#automatic").is(":checked")
+            let discounttoSave = {
+                Id: ID,
+                Airline: $("#airline").val(),
+                Flyfrom: $("#flyfrom").val(),
+                Flyto: $("#flyto").val(),
+                Startdate: $("#startdate").val(),
+                Finishdate: $("#finishdate").val(),
+                Discount: $("#discount").val(),
             }
 
             // add a new Car record to the server
             if (mode == "edit")
-                ajaxCall("PUT", "../api/Discounts", JSON.stringify(cartoSave), updateSuccess, error);
+                ajaxCall("PUT", "../api/Discounts", JSON.stringify(discounttoSave), updateSuccess, error);
             else if (mode == "new")
-                ajaxCall("POST", "../api/Discounts", JSON.stringify(cartoSave), insertSuccess, error);
+                ajaxCall("POST", "../api/Discounts", JSON.stringify(discounttoSave), insertSuccess, error);
             return false;
         }
 
         // fill the form fields
-        function populateFields(carId) {
-            car = getCar(carId);
-            $("#manufacturer").val(car.Manufacturer);
-            $("#model").val(car.Model);
-            $("#year").val(car.Year);
-            $("#price").val(car.Price);
-            $("#color").val(car.Color);
-            $("#hand").val(car.Hand);
-            $("#description").val(car.Description);
-            $("#automatic").prop('checked', car.Automatic);
-            $("#image").attr("src", "images/" + car.Image);
+        function populateFields(ID) {
+            discount = getDiscount(ID);
+            $("#airline").val(discount.Airline);
+            $("#flyfrom").val(discount.Flyfrom);
+            $("#flyto").val(discount.Flyto);
+            $("#startdate").val(discount.Startdate);
+            $("#finishdate").val(discount.Finishdate);
+            $("#discount").val(discount.Discount);
         }
 
 
         // fill the form fields
         function clearFields() {
-            $("#manufacturer").val("");
-            $("#model").val("");
-            $("#year").val("");
-            $("#price").val("");
-            $("#color").val("");
-            $("#hand").val("");
-            $("#description").val("");
-            $("#automatic").prop('checked', true);
-            $("#image").attr("src", "images/car.jpg");
+            $("#airline").val("");
+            $("#flyfrom").val("");
+            $("#flyto").val("");
+            $("#startdate").val("");
+            $("#finishdate").val("");
+            $("#discount").val("");
         }
 
-        // get a car according to its Id
-        function getCar(id) {
+        // get a discount according to its Id
+        function getDiscount(id) {
             for (i in discounts) {
                 if (discounts[i].Id == id)
                     return discounts[i];
@@ -222,12 +228,12 @@
                     columns: [
                         {
                             render: function (data, type, row, meta) {
-                                let dataCar = "data-carId='" + row.Id + "'";
+                                let dataCar = "data-ID='" + row.ID + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCar + "> Edit </button>";
-                                viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCar + "> View </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + dataCar + "> Delete </button>";
-                                return editBtn + viewBtn + deleteBtn;
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + discountsdata + "> Edit </button>";
+                                //viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + discountsdata + "> View </button>";
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + discountsdata + "> Delete </button>";
+                                return editBtn /*+ viewBtn*/ + deleteBtn;
                             }
                         },
                         { data: "ID" },
@@ -260,7 +266,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Car DataTable Example</a>
+                <a class="navbar-brand" href="#">Discounts Table</a>
             </div>
         </div>
     </nav>
@@ -271,95 +277,54 @@
             <table id="discountsTable" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Id</th>
-                        <th>Manufacturer</th>
-                        <th>Model</th>
-                        <th>Year</th>
-                        <th>Price</th>
-                        <th>Color</th>
-                        <th>Hand</th>
-                        <th>Gear</th>
+                        <th>Airline</th>
+                        <th>Fly From</th>
+                        <th>Fly To</th>
+                        <th>Start Date</th>
+                        <th>Finish Date</th>
+                        <th>Discount</th>
                     </tr>
                 </thead>
             </table>
-
         </form>
 
         <div id="editDiv">
             <form id="DiscountForm">
                 <div class="form-group row">
                     <div class="form-group col-sm-3">
-                        <label for="manufacturer"><span class="red-star">★ </span>Manufacturer</label>
-                        <input type="text" class="form-control" id="manufacturer" placeholder="Enter the manufacturer name" required>
+                        <label for="airline"><span class="red-star">★ </span>Airline</label>
+                        <input type="text" class="form-control" id="airline" placeholder="Enter the Airline name" required>
                     </div>
 
 
                     <div class="form-group col-sm-3">
-                        <label for="model"><span class="red-star">★ </span>Model</label>
-                        <input type="text" class="form-control" id="model" placeholder="Enter the model name" required>
-                    </div>
-
-
-                    <div class="form-group col-sm-3">
-                        <label for="year"><span class="red-star">★ </span>Year</label>
-                        <select id="year" class="form-control" required>
-                            <option value="">Choose Year</option>
-                            <option value="2019">2019</option>
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
-                        </select>
+                        <label for="flyfrom"><span class="red-star">★ </span>Fly From</label>
+                        <input type="text" class="form-control" id="flyfrom" placeholder="Enter Fly From" required>
                     </div>
 
                     <div class="form-group col-sm-3">
-                        <label for="price"><span class="red-star">★ </span>Price</label>
-                        <input type="number" class="form-control" id="price" placeholder="Enter the price" required />
+                        <label for="flyto"><span class="red-star">★ </span>Fly To</label>
+                        <input type="text" class="form-control" id="flyto" placeholder="Enter Fly To" required>
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="startdate"><span class="red-star">★ </span>Start Date</label>
+                        <input type="date" class="form-control" id="startdate" placeholder="Enter Start Date" required />
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="finishdate"><span class="red-star">★ </span>Finish Date</label>
+                        <input type="date" class="form-control" id="finishdate" placeholder="Enter Finish Date" required />
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="discount"><span class="red-star">★ </span>Discount</label>
+                        <input type="number" class="form-control" id="discount" placeholder="Enter Discount" required />
                     </div>
 
                 </div>
                 <div class="form-group row">
-
-
-                    <div class="form-group col-sm-3">
-                        <label for="color"><span class="red-star">★ </span>Color</label>
-                        <select class="form-control" id="color" required>
-                            <option value="">Choose Color</option>
-                            <option value="White"> White </option>
-                            <option value="Blue"> Blue </option>
-                            <option value="Black"> Black </option>
-                            <option value="Red"> Red </option>
-                            <option value="Grey"> Grey </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-3">
-                        <label for="hand"><span class="red-star">★ </span>Hand</label>
-                        <select class="form-control" id="hand" required>
-                            <option value="">Choose Hand</option>
-                            <option value="1"> 1 </option>
-                            <option value="2"> 2 </option>
-                            <option value="3"> 3 </option>
-                            <option value="4"> 4 </option>
-                            <option value="5"> 5 </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-3">
-                        <label for="automatic"><span class="red-star">★ </span>Automatic?</label>
-                        <input type="checkbox" class="form-control" id="automatic" checked />
-                    </div>
-
-                </div>
-                <div class="form-group row">
-                    <div class="form-group col-sm-8">
-                        <label for="description">Description</label>
-                        <textarea rows="6" class="form-control" id="description" placeholder="Enter the description"></textarea>
-                    </div>
-
-                    <div class="form-group col-sm-4">
-                        <img src="images/car.jpg" id="image" />
-                    </div>
 
                 </div>
 
@@ -369,9 +334,6 @@
         </div>
 
     </div>
-
-
-
 
 </body>
 </html>
