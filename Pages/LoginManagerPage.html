@@ -3,10 +3,13 @@
 <head>
 
     <link href="FlightHomePage_CSS.css" rel="stylesheet" />
+    <script src="../Scripts/AJAXcall.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
     <script>
 
-                //setup log in//////
+        //setup log in//////
         var users;
         ajaxCall('GET', "../api/signin", "", Signinsuccess, SigninError)
         function Signinsuccess(data) {
@@ -27,8 +30,7 @@
             var password = document.getElementById("password").value;
             if (users.find(element => element.Username == username && password == element.Password)) {
                 alert("Login successfully");
-                getmyflightsList();
-                //window.location = "success.html"; // Redirecting to other page.
+                window.location = "FavoritesForManager.html"; // Redirecting to other page.
                 return false;
             }
             else {
@@ -63,6 +65,9 @@
                 <label>Password :</label>
                 <input type="password" name="password" id="password" />
                 <input type="button" value="Login" id="submit" onclick="validate()" />
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
             </form>
         </div>
     </div>

@@ -53,6 +53,7 @@ h1{
     border: 2px solid blue;
 }
 
+
 /*NEW*/
 
 /* Full-width input fields */
@@ -168,6 +169,11 @@ span.psw {
 
         .topnav a.active {
             background-color: #4CAF50;
+            color: white;
+        }
+
+        .topnav a.warning {
+            background-color: red;
             color: white;
         }
 

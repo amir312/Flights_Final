@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="FlightHomePage_CSS.css" rel="stylesheet" />
+    <script src="../Scripts/AJAXcall.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            getmyflightsList();
+
+        });
+
+        function getmyflightsList() {
+            ajaxCall("GET", "../api/Flights", "", getMyFlightsSuccess, getMyFlightsError);
+        }
+
+        function getMyFlightsSuccess(data) {
+            console.log(data);
+
+            document.getElementById('result').innerHTML = "";
+            str = `    <h1>All Favorites Flights:</h1>
+                                                    <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                    <th>#</th>
+                                                    <th> Price </th>
+                                                    <th> Departure </th>
+                                                    <th> Arrival Time </th>
+                                                    <th> Departure City </th>
+                                                    <th> Arrival City </th>
+                                                    <th> Airlines </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>`;
+            for (var i = 0; i < data.length; i++) {
+                // <td width="10%" id="id${i}">${data[i].Id}</td> לא מתעצב לי יפה שמתי בצד
+                str += `
+
+                                                <tr>
+
+                                                <td>${i + 1}</td>
+                                                <td id="price${i}"> ${data[i].Price} € </td>
+                                                <td id="departDate${i}"> ${data[i].DepartDate} </td>
+                                                <td id="returnDate${i}"> ${data[i].ReturnDate} </td>
+                                                <td id="flyFrom${i}"> ${data[i].FlyFrom}</td>
+                                                <td id="flyTo${i}"> ${data[i].FlyTo} </td>
+                                                <td id="airlines${i}"> ${data[i].Airlines} </td>
+
+                                                </tr>
+                                                </tbody>`
+
+            }
+            str += `</table>`;
+            document.getElementById('result').innerHTML += str;
+        }
+
+        function getMyFlightsError(err) {
+            console.log(err);
+        }
+
+    </script>
+
+
+    <meta charset="utf-8" />
+    <title>Favorties For Manager</title>
+</head>
+<body>
+
+    <div class="topnav">
+        <a class="active" href="FlightsHomePage.html">Log Out</a>
+        <a href="FavoritesForManager.html">Show Favorites Flights</a>
+        <a href="manager_ShowOrderd_flights.html">Show Ordered Flights</a>
+    </div>
+
+    <div class="col-sm-12">
+        <div id="result"></div>
+    </div>
+</body>
+</html>
