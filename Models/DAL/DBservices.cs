@@ -622,6 +622,59 @@ public class DBservices
         return users;
     }
 
+    public List<Discounts> getdiscounts()
+    {
+        List<Discounts> discounts = new List<Discounts>();
+        SqlConnection con = null;
+
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT * FROM Discounts";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr2 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr2.Read())
+            {   // Read till the end of the data into a row
+                Discounts u = new Discounts();
+
+                u.Airline = (string)dr2["airline"];
+                u.Flyfrom = (string)dr2["flyfrom"];
+                u.Flyto = (string)dr2["flyto"];
+                u.Startdate = (string)dr2["startdate"];
+                u.Finishdate = (string)dr2["finishdate"];
+                u.Discount = (float)dr2["discount"];
+
+                discounts.Add(u);
+            }
+            dr2.Close();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+        }
+        return discounts;
+    }
+
 
 
 
