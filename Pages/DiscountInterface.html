@@ -108,21 +108,31 @@
 
         function onSubmitFunc() {
 
-            var Id = -1;
+            discounttoSave = "";
+            //var Id = -1;
             if (mode == "edit") {
                 Id = discount.Id;
+                var discounttoSave = {
+                 Id: Id,
+                 Airline: $("#airline").val(),
+                 Flyfrom: $("#flyfrom").val(),
+                 Flyto: $("#flyto").val(),
+                 Startdate: $("#startdate").val(),
+                 Finishdate: $("#finishdate").val(),
+                 Discount: $("#discount").val(),
+            }
             }
 
-            let discounttoSave = {
-                Id: Id,
-                Airline: $("#airline").val(),
-                Flyfrom: $("#flyfrom").val(),
-                Flyto: $("#flyto").val(),
-                Startdate: $("#startdate").val(),
-                Finishdate: $("#finishdate").val(),
-                Discount: $("#discount").val(),
+            if (mode == "new") {
+                var discounttoSave = {
+                    Airline: $("#airline").val(),
+                    Flyfrom: $("#flyfrom").val(),
+                    Flyto: $("#flyto").val(),
+                    Startdate: $("#startdate").val(),
+                    Finishdate: $("#finishdate").val(),
+                    Discount: $("#discount").val(),
+                }
             }
-
             // add a new Discount record to the server
             if (mode == "edit")
                 ajaxCall("PUT", "../api/Discounts", JSON.stringify(discounttoSave), updateSuccess, error);
@@ -141,8 +151,6 @@
             $("#finishdate").val(discount.Finishdate);
             $("#discount").val(discount.Discount);
         }
-
-
         // fill the form fields
         function clearFields() {
             $("#airline").val("");
