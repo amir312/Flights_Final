@@ -40,19 +40,20 @@
         }
 
         function getMyFlightsSuccess(Favoritesdata) {
-            AllFavorites = Favoritesdata; // keep the favorites array in a global variable;
+            AllFavorites = Favoritesdata; // keep the cars array in a global variable;
             try {
                 tbl = $('#FavoritesTable').DataTable({
                     data: Favoritesdata,
                     pageLength: 5,
                     columns: [
-                        { data: "Id" },
+                        { data: "Price" },
                         { data: "Airlines" },
                         { data: "FlyFrom" },
                         { data: "FlyTo" },
-                        { data: "Price" },
                         { data: "DepartDate" },
                         { data: "ReturnDate" },
+                        { data: "Id" },
+                       
                     ],
                 });
             }
@@ -73,29 +74,34 @@
     <div class="topnav">
         <a class="active" href="FlightsHomePage.html">Log Out</a>
         <a href="FavoritesForManager.html">Show Favorites Flights</a>
-        <a href="manager_ShowOrderd_flights.html">Show Ordered Flights</a>
+        <a href="OrdersForManager.html">Show Ordered Flights</a>
     </div>
 
     <div class="container-fluid">
         <p> </p>
         <p></p>
         <form id="pForm">
-            <h1>All Favorites Flights: </h1>
             <table id="FavoritesTable" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>Count Of Favorite</th>
                         <th>Airlines</th>
                         <th>Fly From</th>
                         <th>Fly To</th>
-                        <th>Price</th>
                         <th>DepartDate</th>
                         <th>ReturnDate</th>
+                        <th>Flight Id</th>
                     </tr>
                 </thead>
             </table>
 
         </form>
     </div>
+
+
+
+    <!--<div class="col-sm-12">
+        <div id="result"></div>
+    </div>-->
 </body>
 </html>
