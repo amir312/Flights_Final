@@ -37,7 +37,7 @@ public class DBservices
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method inserts a car to the cars table 
+    // This method inserts a flight to the flights table 
     //--------------------------------------------------------------------------------------------------
     public int insert(Flight flight)
     {
@@ -62,12 +62,7 @@ public class DBservices
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
-            //for (int i = 0; i < flight.Routes.Count; i++)
-            //{
-            //    cStr = BuildInsertCommandRoute(flight.Id,flight,;
-            //}
             return numEffected;
-
         }
         catch (Exception ex)
         {
@@ -257,80 +252,10 @@ public class DBservices
 
         return command;
     }
-    /// <summary>
-    /// route sb services
-    /// </summary>
-    /// <param name="route"></param>
-    /// <returns></returns>
-    //public int insertroute(List<Route> route)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("DBConnectionString"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    string cStr = "";
-    //    int numEffected = 0;
-
-
-    //    try
-    //    {
-    //        foreach (var r in route)
-    //        {
-    //            cStr = BuildInsertCommandRoute(r.Id, r.Code, r.City, r.I);      // helper method to build the insert string
-
-    //            cmd = CreateCommand(cStr, con);             // create the command
-
-    //            numEffected = cmd.ExecuteNonQuery(); // execute the command
-
-    //        }
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return 0;
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
 
     //--------------------------------------------------------------------
     // Build the Insert command String
     //--------------------------------------------------------------------
-    private String BuildInsertCommandRoute(string Id, string Code, string City, string I)
-    {
-        String command;
-
-
-
-        StringBuilder sb = new StringBuilder();
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}')", Id, Code, City, I);
-        // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO Routes " + "(Id, Code,City,I) ";
-        command = prefix + sb.ToString();
-
-        return command;
-    }
-
     public List<OrderdFlight> getOrderdflightsDB()
     {
         List<OrderdFlight> OrderdFlightList = new List<OrderdFlight>();
@@ -415,9 +340,6 @@ public class DBservices
             while (dr2.Read())
             {   // Read till the end of the data into a row
                 Flight f = new Flight();
-                /////
-                /// f.Routes = 
-                /////
                 f.Id = (string)dr2["FlightID"];
                 f.FlyFrom = (string)dr2["FlyFrom"];
                 f.FlyTo = (string)dr2["FlyTO"];
@@ -444,130 +366,6 @@ public class DBservices
         }
         return FlightList;
     }
-
-
-
-
-
-
-
-
-    public List<Flight> get_flight_by_connection(string city)
-    {
-        List<Flight> FlightList = new List<Flight>();
-        SqlConnection con = null;
-
-        try
-        {
-            con = connect("DBConnectionString"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        try
-        {
-            String selectSTR = $@"select *
-                                  from [dbo].[FavoriteTBL]
-                                  where Id in (
-                                  select  R.Id
-                                  from  [dbo].[FavoriteTBL] F inner join [dbo].[Routes] R on F.Id=R.Id
-                                  where R.City='{city}')";
-            SqlCommand cmd = new SqlCommand(selectSTR, con);
-
-            // get a reader
-            SqlDataReader dr4 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
-
-            while (dr4.Read())
-            {   // Read till the end of the data into a row
-                Flight f = new Flight();
-
-                f.Id = (string)dr4["Id"];
-                f.FlyFrom = (string)dr4["Arrival_City"];
-                f.FlyTo = (string)dr4["Departure_City"];
-                f.DepartDate = (string)dr4["Arrival_Time"];
-                f.ReturnDate = (string)dr4["Departure_Time"];
-                f.Price = float.Parse(dr4["Price"].ToString());
-                f.Routes = new List<string>();
-                FlightList.Add(f);
-
-
-            }
-            dr4.Close();
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        finally
-        {
-            if (con != null)
-            {
-                con.Close();
-            }
-        }
-        return FlightList;
-
-    }
-
-    public List<Flight> get_flight_routes_by_connection(List<Flight> FullList)
-    {
-        SqlConnection con = null;
-        String selectSTR = "";
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("DBConnectionString"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        try
-        {
-
-            for (int i = 0; i < FullList.Count; i++)
-            {
-
-
-                selectSTR = $@"SELECT * 
-                                   FROM Routes1_2020
-                                   where FlightId='{FullList[i].Id}'";
-
-                cmd = new SqlCommand(selectSTR, con);
-
-                // get a reader
-                SqlDataReader dr5 = cmd.ExecuteReader();// (CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
-                while (dr5.Read())
-                {   // Read till the end of the data into a row
-
-                    FullList[i].Routes.Add((string)dr5["Tocity"]);
-
-                }
-                dr5.Close();
-            }
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        finally
-        {
-            if (con != null)
-            {
-                con.Close();
-            }
-        }
-        return FullList;
-    }
-
-
-
     public List<signin> getusers()
     {
         List<signin> users = new List<signin>();
