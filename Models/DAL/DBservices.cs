@@ -114,7 +114,7 @@ public class DBservices
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
-           
+
             return numEffected;
 
         }
@@ -145,10 +145,10 @@ public class DBservices
         String command;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}')", flight.Id,flight.Airlines , flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate);
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}')", flight.Id, flight.Airlines, flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate);
         // use a string builder to create the dynamic string
         String prefix = "INSERT INTO FavoriteTBL " + "(FlightID, AirLine, FlyFrom, FlyTO, Departure, Arraivel)";
-        
+
         command = prefix + sb.ToString();
 
         return command;
@@ -331,7 +331,7 @@ public class DBservices
         return command;
     }
 
-    public List <OrderdFlight> getOrderdflightsDB()
+    public List<OrderdFlight> getOrderdflightsDB()
     {
         List<OrderdFlight> OrderdFlightList = new List<OrderdFlight>();
         SqlConnection con = null;
@@ -391,7 +391,7 @@ public class DBservices
     {
         List<Flight> FlightList = new List<Flight>();
         SqlConnection con = null;
-       
+
 
         try
         {
@@ -416,7 +416,7 @@ public class DBservices
             {   // Read till the end of the data into a row
                 Flight f = new Flight();
                 /////
-              /// f.Routes = 
+                /// f.Routes = 
                 /////
                 f.Id = (string)dr2["FlightID"];
                 f.FlyFrom = (string)dr2["FlyFrom"];
@@ -424,8 +424,8 @@ public class DBservices
                 f.DepartDate = (string)dr2["Departure"];
                 f.ReturnDate = (string)dr2["Arraivel"];
                 f.Price = float.Parse(dr2["FavNum"].ToString());
-                f.Airlines = (string)dr2["Airline"];   
-                   
+                f.Airlines = (string)dr2["Airline"];
+
                 FlightList.Add(f);
             }
             dr2.Close();
@@ -445,12 +445,12 @@ public class DBservices
         return FlightList;
     }
 
-  
 
 
 
 
-   
+
+
 
     public List<Flight> get_flight_by_connection(string city)
     {
@@ -492,7 +492,7 @@ public class DBservices
                 f.Routes = new List<string>();
                 FlightList.Add(f);
 
-                
+
             }
             dr4.Close();
         }
@@ -653,7 +653,8 @@ public class DBservices
                 u.Flyto = (string)dr2["flyto"];
                 u.Startdate = (string)dr2["startdate"];
                 u.Finishdate = (string)dr2["finishdate"];
-                u.Discount = (float)dr2["discount"];
+                u.Discount = (decimal)dr2["discount"];
+                u.Id = (int)dr2["ID"];
 
                 discounts.Add(u);
             }
@@ -674,7 +675,7 @@ public class DBservices
         return discounts;
     }
 
- //  DELETE Discount
+    //  DELETE Discount
     //--------------------------------------------------------------------------------------------------
     public int DeleteDiscount(int Id)
     {
@@ -711,8 +712,6 @@ public class DBservices
             }
         }
     }
-
-
 }
 
 
