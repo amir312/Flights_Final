@@ -712,6 +712,65 @@ public class DBservices
             }
         }
     }
+
+    public int InsertDiscount (Discounts discount1)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommandDiscount(discount1);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+
+            return numEffected;
+
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private String BuildInsertCommandDiscount(Discounts discount1)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("Values('{0}', '{1}', '{2}','{3}','{4}','{5}')", discount1.Airline, discount1.Flyfrom, discount1.Flyto, discount1.Startdate, discount1.Finishdate, discount1.Discount);
+
+        // use a string builder to create the dynamic string
+        String prefix = "INSERT INTO Discounts" + "(airline,flyfrom,flyto,startdate,finishdate,discount) ";
+        command = prefix + sb.ToString();
+
+        return command;
+    }
 }
 
 
