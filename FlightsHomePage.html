@@ -1,0 +1,549 @@
+﻿﻿﻿﻿﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="FlightHomePage_CSS.css" rel="stylesheet" />
+    <script src="../Scripts/AJAXcall.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>ANT Flights</title>
+
+    <!--NEW -Form Animation -  Currently not working on CSS-->
+    <style>
+
+
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+            button:hover {
+                opacity: 0.8;
+            }
+
+
+
+        /* Extra styles for the cancel button */
+        .cancelbtn {
+            width: auto;
+            padding: 10px 18px;
+            background-color: #f44336;
+        }
+
+        /* Center the image and position the close button */
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+        }
+
+        img.avatar {
+            width: 40%;
+            border-radius: 50%;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button (x) */
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: red;
+                cursor: pointer;
+            }
+
+
+        /* Add Zoom Animation */
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s
+        }
+
+        @-webkit-keyframes animatezoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+
+        @keyframes animatezoom {
+            from {
+                transform: scale(0)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        /* Change styles for span and cancel button on extra small screens */
+        @media screen and (max-width: 300px) {
+            span.psw {
+                display: block;
+                float: none;
+            }
+
+            .cancelbtn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <!--NEW -Form Animation -  Currently not working on CSS-->
+
+    <script>
+        $(document).ready(function () {
+            ///localStorage.clear();  ///to claer the localstorage
+            $("#searchBTN").click(getFlightFunc);
+            $("#MyflightBTN").click(getmyflightsList);
+            mydata = [];
+            url = "https://api.skypicker.com/locations?type=dump&locale=en-US&location_types=airport&limit=4000&active_only=true&sort=name";
+            $.get(url).done(getDestinations);
+            $.get(url).fail(errorCB);
+            $("#editDiv").hide();
+        });
+
+        function errorCB(err) {
+            console.log(err);
+        }
+        function getDestinations(data) {
+            console.log(data);
+            var arrDestinations = [];
+            for (var i = 0; i < data.locations.length; i++) {
+                arrDestinations[i] = {
+                    "Staticid": i,
+                    "id": data.locations[i].airport_int_id,
+                    "code": data.locations[i].id,
+                    "location_x": data.locations[i].location.lat,
+                    "location_y": data.locations[i].location.lon,
+                    "name": data.locations[i].name
+                }
+            }
+            ajaxCall("POST", "../api/Destinations", JSON.stringify(arrDestinations), InsertToDatabase, errorCB)
+        }
+
+        function InsertToDatabase() {
+            console.log("Done");
+        }
+
+        function getFlightFunc() {
+            ///////////////////////////////////////////מקבל פרטים ממשתמש ומאתחל תתאריכים ויעדים/
+
+            var from = $("#flyfrominput").val().toUpperCase();
+            var to = $("#flytoinput").val().toUpperCase();
+            var startDate = $("#departinput").val();
+            var returnDate = $("#returninput").val();
+            let Syear = startDate.substring(0, 4);
+            let Smonth = startDate.substring(5, 7);
+            let Sday = startDate.substring(8, 10);
+            let Tyear = returnDate.substring(0, 4);
+            let Tmonth = returnDate.substring(5, 7);
+            let Tday = returnDate.substring(8, 10);
+            startDate = Sday + "/" + Smonth + "/" + Syear;
+            returnDate = Tday + "/" + Tmonth + "/" + Tyear
+            /////////////////////////////////////////////////////////END/
+            ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
+        }
+
+        function DataGenertor(data) {
+            console.log(data)
+            data = data.data;
+            mydata = data;
+            console.log(mydata);
+            clickfaivoriate = []
+            counterpass=[]
+            ShowData(data);
+        }
+
+
+
+        function ShowData(data) {
+            document.getElementById('result').innerHTML = "";
+            for (var i = 0; i < data.length; i++) {
+                clickfaivoriate[i] = true; // check all faivoriate status
+                counterpass[i] = 0; //check who mach passenger order in same time
+                str = '';
+                str = `
+                                            <div id="FlightsDiv">
+                                            <h1>Flight Details:</h1>
+                                            <div id="id${i}"> ${data[i].id}</div>
+
+                                            <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                <th> Price </th>
+                                                <th> Departure </th>
+                                                <th> Arrival Time </th>
+                                                <th> Departure City </th>
+                                                <th> Arrival City </th>
+                                                <th> Airlines </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                            <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                            <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                            <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                            <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                            <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                            <td id="airlines${i}"> ${data[i].airlines} </td>
+                                            </tr>
+                                            </tbody>
+
+                                            </table>`;
+
+                departuretime = new Date(data[i].dTimeUTC * 1000);
+                arrivaltime = new Date(data[i].aTimeUTC * 1000);
+                str += `<button type="button" id="add${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
+                str += `<button type="button" id="order${i}" onclick="orderNow(${i})">Order Now</button>`;
+                str += ` <div id="orderCard${i}"></div></div>`;
+                document.getElementById('result').innerHTML += str;
+            }
+        }
+
+
+        function errorData(err) {
+            console.log(err);
+        }
+
+         function addPassenger(index) {
+        if (counterpass[index] == 0) { counterpass[index] = 1; }
+        else { counterpass[index]++; }
+        var str = "";
+        str +=
+            `<label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
+                    <input id="${index}fullNameID_Inputabc${counterpass[index]}" type="text" class="form-control" placeholder="Enter your full name" \>
+`
+             var newDiv = document.createElement("div");
+             newDiv.innerHTML=str
+             document.getElementById(`pass${index}`).appendChild(newDiv);
+    }
+
+        function orderNow(index) {
+         
+
+            var str = "";
+            str += `<div id="editDiv">
+        <div id="showID">ID</div>
+        <form id="orderForm">
+            <div class="form-group row">
+                <div class="form-group col-sm-3">
+                    <label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
+                    <input id="fullNameID_Input${index}" type="text" class="form-control" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group col-sm-3">
+                    <label for="eMail"><span class="red-star">★ </span>Main Email</label>
+                    <input type="text" class="form-control" id="eMail_input${index}" placeholder="name@name.com" required>
+                </div>
+
+                <div class="form-group col-sm-3">
+                    <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
+                    <input type="checkbox" class="form-control" id="acceptTerms${index}"  />
+                </div>
+                <div class="from-group col-sm-3">
+                    Add Passenger <input type="button" value="+" onclick="addPassenger(${index})" />
+                   <div id=pass${index}> </div>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+
+            </div>
+
+            <button onclick="AddToOrdersTable(counterpass[${index}],${index})" type="button" class="btn btn-primary btn-lg" id="AddToOrdersTable_BTN">Order Flight!</button>
+            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
+        </form>
+    </div>`
+
+            document.getElementById(`orderCard${index}`).innerHTML = str;
+          
+        }
+
+        function AddToOrdersTable(counterindex,index) {
+
+            let id = mydata[index].id;
+            let name = $(`#fullNameID_Input${index}`).val();
+            let mail = $(`#eMail_input${index}`).val();
+            let  airline1 = mydata[index].airlines[0];
+            let flyfrom1 = mydata[index].cityFrom;
+            let flyto1 = mydata[index].cityTo;
+            if (counterindex!=0){
+                for (var i = 0; i < counterindex; i++) {
+                     if ($(`#${index}fullNameID_Inputabc${i+1}`).val() == "") { alert("please insert valid Name"); return 0; }
+                name += " ,"+ $(`#${index}fullNameID_Inputabc${i+1}`).val();
+                
+                }
+            }
+
+            if (document.getElementById(`acceptTerms${index}`).checked == false) {
+                alert("Please Accept Terms Before Ordering Flights");
+                return 0;
+            }
+            if (name == "") { alert("please insert valid Name"); return 0; }
+            if (mail == "") { alert("please insert valid Email"); return 0; }
+
+
+            OrderdFlight = {
+                flightID: id,
+                fullName: name,
+                email: mail,
+                airline: airline1,
+                flyFrom: flyfrom1,
+                flyTo: flyto1
+            };
+            console.log(OrderdFlight);
+            ajaxCall("POST", "../api/OrderFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
+        }
+
+        function postORDERSuccess(data) {
+            console.log(data);
+            alert("Add To orderd Flight");
+        }
+
+        function postORDERError(err) {
+            alert("Error Alert");
+        }
+
+
+        function addToMyFlights(index) {
+            var airlinesToSplit = document.getElementById(`airlines${index}`).textContent;
+            var res1 = airlinesToSplit.split(" ", 2);
+            var res2 = res1[1].split(",", 1);
+            var res3 = res2.toString();
+
+            var myflt = {
+
+                "id": (mydata[index].id).toString(),
+                "price": mydata[index].price,
+                "flyFrom": mydata[index].cityCodeFrom,
+                "flyTo": mydata[index].cityCodeTo,
+                "departDate": document.getElementById(`dip_date${index}`).textContent,
+                "returnDate": document.getElementById(`arr_date${index}`).textContent,
+                "airlines": res3,
+            }
+
+
+
+            if (clickfaivoriate[index] == true) {
+                document.getElementById(`add${index}`).style.background = "#db0f13";
+                document.getElementById(`add${index}`).innerHTML = "";
+                document.getElementById(`add${index}`).innerHTML = "Cancel Favorite";
+                clickfaivoriate[index] = false;
+                localStorage.setItem(`${mydata[index].cityCodeFrom}myfivorite${index}`, JSON.stringify(myflt));
+            }
+            else {
+                document.getElementById(`add${index}`).style.background = "#4CAF50";
+                document.getElementById(`add${index}`).innerHTML = "";
+                document.getElementById(`add${index}`).innerHTML = "Add To Favoriate";
+                clickfaivoriate[index] = true;
+                localStorage.removeItem(`${mydata[index].cityCodeFrom}myfivorite${index}`);
+            }
+            x = localStorage.getItem(`${mydata[index].cityCodeFrom}myfivorite${index}`);
+            x = JSON.parse(x);
+            setTimeout(function () {
+                if (x != null) {
+                    console.log(x);
+                    ajaxCall("POST", "../api/Flights", JSON.stringify(x), postMyFltSuccess, postMyFltError);
+
+                }
+            }, 6000);
+
+
+        }
+
+        function postMyFltSuccess(data) {
+            console.log("Posted sucsses");
+
+        }
+        function postMyFltError(err) {
+            console.log(err);
+        }
+        // show my fivorite from local storge
+        function getmyflightsList() {
+
+            value = []
+            // iterate localStorage
+            for (var i = 0; i < localStorage.length; i++) {
+
+                // set iteration key name
+                var key = localStorage.key(i);
+
+
+
+                // use key name to retrieve the corresponding value
+                try {
+                    value[i] = JSON.parse(localStorage.getItem(key));
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            document.getElementById('result').innerHTML = "";
+            str = `    <h1>Flight Details:</h1>
+                                                <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                <th>#</th>
+                                                <th> Price </th>
+                                                <th> Departure </th>
+                                                <th> Arrival Time </th>
+                                                <th> Departure City </th>
+                                                <th> Arrival City </th>
+                                                <th> Airlines </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>`;
+            for (var i = 0; i < value.length; i++) {
+                str += `
+                                            <tr>
+                                            <td>${i + 1}</td>
+                                            <td id="price${i}"> ${value[i].price} € </td>
+                                            <td id="departDate${i}"> ${value[i].departDate} </td>
+                                            <td id="returnDate${i}"> ${value[i].returnDate} </td>
+                                            <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
+                                            <td id="flyTo${i}"> ${value[i].flyTo} </td>
+                                            <td id="airlines${i}"> ${value[i].airlines} </td>
+                                            </tr>
+                                            </tbody>`
+            }
+            str += `</table>`;
+            document.getElementById('result').innerHTML += str;
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <div class="topnav">
+        <a class="active" href="FlightsHomePage.html">Home</a>
+        <a href="LoginManagerPage.html">Manager Login</a>
+    </div>
+
+    <div class="container-fluid" id="frame">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Flight Information System - ANT</h1>
+                <div class="row" id="destenationDIV">
+                    <div class="col-sm-12">
+                        <p>
+                            Fly From
+                        </p>
+                        <input type="text" class="form-control" placeholder="Country, city or airport" id="flyfrominput" value="TLV">
+
+                        <p>
+                            Fly To
+                        </p>
+                        <input type="text" class="form-control" placeholder="Country, city or airport" id="flytoinput" value="NYC">
+                    </div>
+                </div>
+
+                <div class="row" id="dateDIV">
+                    <div class="col-sm-12">
+                        <p>
+                            Depart
+                        </p>
+                        <input type="date" class="form-control" placeholder="Depart" id="departinput" value="2020-05-25">
+
+                        <p>
+                            Return
+                        </p>
+                        <input type="date" class="form-control" placeholder="Return" id="returninput" value="2020-05-25">
+                    </div>
+
+                </div>
+
+                <div class="row d-flex justify-content-center" id="BTNid">
+                    <div class="col-sm-12" id="btnSearchDiv">
+                        <button type="button" class="btn btn-primary btn-block" id="searchBTN">Search</button>
+                    </div>
+
+                    <div class="col-sm-12" id="btnMyflightDiv">
+                        <button type="button" class="btn btn-primary btn-block" id="MyflightBTN">My Favorites</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</body>
+</html>
