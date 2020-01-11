@@ -55,5 +55,12 @@ namespace HW3.Models
             int numAffected = dbs1.InsertDiscount(this);
             return numAffected;
         }
+
+        public int PutDiscount()
+        {
+            DBservices dbs1 = new DBservices();
+            int numAffected = dbs1.PutDiscount(this);
+            return numAffected;
+        }
     }
 }
