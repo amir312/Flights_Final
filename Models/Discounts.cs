@@ -48,5 +48,12 @@ namespace HW3.Models
             DBservices dbs = new DBservices();
             dbs.DeleteDiscount(id);
         }
+
+        public int InsertDiscount()
+        {
+            DBservices dbs1 = new DBservices();
+            int numAffected = dbs1.InsertDiscount(this);
+            return numAffected;
+        }
     }
 }
