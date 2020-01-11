@@ -35,7 +35,7 @@ namespace HW3.Controllers
             return "value";
         }
 
-
+        [HttpPost]
         // POST api/<controller>
         public void Post([FromBody] Models.OrderdFlight oflt1)
         {
