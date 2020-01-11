@@ -43,8 +43,11 @@ namespace HW3.Controllers
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public List<Discounts> Put(Discounts discount2)
         {
+            Discounts discount = new Discounts();
+            discount2.PutDiscount();
+            return discount.getdiscounts();
         }
 
         // DELETE api/<controller>/5
