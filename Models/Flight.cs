@@ -7,8 +7,8 @@ namespace HW3.Models
 {
     public class Flight
     {
-       public static List<Flight> flightList = new List<Flight>();
-       public static List<Flight> fiteredList = new List<Flight>();
+        public static List<Flight> flightList = new List<Flight>();
+        public static List<Flight> fiteredList = new List<Flight>();
 
         string id;
         float price;
@@ -22,7 +22,7 @@ namespace HW3.Models
         public string Id { get => id; set => id = value; }
         public float Price { get => price; set => price = value; }
         public string FlyFrom { get => flyFrom; set => flyFrom = value; }
-   
+
         public string FlyTo { get => flyTo; set => flyTo = value; }
         public string DepartDate { get => departDate; set => departDate = value; }
         public string ReturnDate { get => returnDate; set => returnDate = value; }
@@ -40,14 +40,14 @@ namespace HW3.Models
             DepartDate = departdate;
             ReturnDate = returedate;
             Subflights = subflight;
-            Airlines  = airlines;
+            Airlines = airlines;
             Routes = routes;
         }
 
         public List<Flight> getFlight()
         {
             return flightList;
-            
+
         }
         public List<Flight> getFilteredConnection(string City)
         {
@@ -70,7 +70,7 @@ namespace HW3.Models
 
             DBservices dbs = new DBservices();
             FullList = dbs.getMYflight();
-          
+
             DBservices dbs1 = new DBservices();
             //FullRoutes = dbs1.GetRoutes();
             //return dbs.GetFlightRoute(FullList, FullRoutes);

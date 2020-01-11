@@ -145,9 +145,10 @@ public class DBservices
         String command;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}','{6}')", flight.Id, flight.Price.ToString(), flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate, flight.Airlines);
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}','{3}','{4}','{5}')", flight.Id,flight.Airlines , flight.FlyFrom, flight.FlyTo, flight.DepartDate, flight.ReturnDate);
         // use a string builder to create the dynamic string
-        String prefix = "INSERT INTO All_Favorites " + "(Id, Price,Arrival_City,Departure_City,Arrival_Time,Departure_Time,Airlines ) ";
+        String prefix = "INSERT INTO FavoriteTBL " + "(FlightID, AirLine, FlyFrom, FlyTO, Departure, Arraivel)";
+        
         command = prefix + sb.ToString();
 
         return command;
@@ -403,7 +404,9 @@ public class DBservices
         }
         try
         {
-            String selectSTR = "SELECT * FROM All_Favorites";
+            String selectSTR = "SELECT COUNT(ID) as FavNum, FlightID, AirLine,FlyFrom, FlyTO, Departure, Arraivel" +
+                " FROM [dbo].[FavoriteTBL]" +
+                " GROUP BY FlightID, AirLine,FlyFrom, FlyTO, Departure, Arraivel ORDER BY COUNT(ID) DESC, AirLine; ";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
@@ -415,18 +418,14 @@ public class DBservices
                 /////
               /// f.Routes = 
                 /////
-                f.Id = (string)dr2["Id"];
-                f.FlyFrom = (string)dr2["Arrival_City"];
-                f.FlyTo = (string)dr2["Departure_City"];
-                f.DepartDate = (string)dr2["Arrival_Time"];
-                f.ReturnDate = (string)dr2["Departure_Time"];
-                f.Price = float.Parse(dr2["Price"].ToString());
-                f.Airlines = (string)dr2["Airlines"];
-                
-                
-
-                f.Routes = new List<string>();
-             //
+                f.Id = (string)dr2["FlightID"];
+                f.FlyFrom = (string)dr2["FlyFrom"];
+                f.FlyTo = (string)dr2["FlyTO"];
+                f.DepartDate = (string)dr2["Departure"];
+                f.ReturnDate = (string)dr2["Arraivel"];
+                f.Price = float.Parse(dr2["FavNum"].ToString());
+                f.Airlines = (string)dr2["Airline"];   
+                   
                 FlightList.Add(f);
             }
             dr2.Close();
@@ -470,10 +469,10 @@ public class DBservices
         try
         {
             String selectSTR = $@"select *
-                                  from [dbo].[All_Favorites]
+                                  from [dbo].[FavoriteTBL]
                                   where Id in (
                                   select  R.Id
-                                  from  [dbo].[All_Favorites] F inner join [dbo].[Routes] R on F.Id=R.Id
+                                  from  [dbo].[FavoriteTBL] F inner join [dbo].[Routes] R on F.Id=R.Id
                                   where R.City='{city}')";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -654,8 +653,7 @@ public class DBservices
                 u.Flyto = (string)dr2["flyto"];
                 u.Startdate = (string)dr2["startdate"];
                 u.Finishdate = (string)dr2["finishdate"];
-                u.Discount = (decimal)dr2["discount"];
-                u.Id = (int)dr2["ID"];
+                u.Discount = (float)dr2["discount"];
 
                 discounts.Add(u);
             }
