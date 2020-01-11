@@ -19,14 +19,14 @@ namespace HW3.Controllers
 
         //}
 
-      
+
 
         [HttpGet]
 
-        public List<OrderdFlight> GetFlights()
+        public List<Models.OrderdFlight> GetFlights()
         {
-               OrderdFlight ordered_flight = new OrderdFlight();
-               return ordered_flight.getOrderdflights();
+            Models.OrderdFlight ordered_flight = new Models.OrderdFlight();
+            return ordered_flight.getOrderdflights();
         }
 
         // GET api/<controller>/5

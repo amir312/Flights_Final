@@ -9,15 +9,15 @@ using HW3.Models;
 namespace HW3.Controllers
 {
     public class FlightsController : ApiController
-    {
-
+    {    
+        
         Flight flightToFlilter = new Flight();
 
         // GET api/<controller>
         public IEnumerable<Flight> Get()
         {
-            Flight flight = new Flight();
-            return flight.getMYflights();
+                Flight flight = new Flight();
+                return flight.getMYflights();
         }
 
 
@@ -26,23 +26,10 @@ namespace HW3.Controllers
         {
             return "value";
         }
-
-        [HttpGet]
-        [Route("api/flights/stop/{city}")]
-        public IEnumerable<Flight> Get(string city)
-        {
-            //return flightToFlilter.getFilteredConnection(city);
-            Flight flight = new Flight();
-            return flight.getflightsByCity(city);
-
-        }
-
-       
-
         // POST api/<controller>
         public void Post([FromBody]Flight flt1)
         {
-            flt1.insert();
+             flt1.insert();
         }
 
 
