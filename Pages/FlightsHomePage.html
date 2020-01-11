@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿
+﻿﻿﻿﻿﻿﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +16,10 @@
 
     <!--NEW -Form Animation -  Currently not working on CSS-->
     <style>
+
+
+
+
 
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -158,6 +162,10 @@
     <!--NEW -Form Animation -  Currently not working on CSS-->
 
     <script>
+        var discountData;
+
+
+
         $(document).ready(function () {
             ///localStorage.clear();  ///to claer the localstorage
             $("#searchBTN").click(getFlightFunc);
@@ -167,6 +175,9 @@
             $.get(url).done(getDestinations);
             $.get(url).fail(errorCB);
             $("#editDiv").hide();
+
+
+
         });
 
         function errorCB(err) {
@@ -192,7 +203,44 @@
             console.log("Done");
         }
 
+
+        function getDiscountsSuccess(data) {
+            discountData = data;
+                    
+            console.log(discountData);
+        }
+
+
+        function Discountserror(err) {
+            alert(err);
+        }
+
+
+        function checkIfDiscount(flt) {
+            console.log(discountData[1].Discount);
+            x = discountData.length;
+            console.log(flt.airlines[0]);
+
+
+
+            for (var i = 0; i < x; i++) {
+                if (discountData[i].Airline == flt.airlines[0] && discountData[i].FlyFrom == flt.flyfrom) {
+                    return discountData[i].Discount *100+"%"+ "Discount";
+                }
+            }
+
+            return "no discount";
+            console.log(discountData[0].Airline);
+           
+            
+        }
+
+
+
         function getFlightFunc() {
+          ajaxCall("GET", "../api/Discounts", "", getDiscountsSuccess, Discountserror);
+
+
             ///////////////////////////////////////////מקבל פרטים ממשתמש ומאתחל תתאריכים ויעדים/
 
             var from = $("#flyfrominput").val().toUpperCase();
@@ -230,38 +278,39 @@
                 counterpass[i] = 0; //check who mach passenger order in same time
                 str = '';
                 str = `
-                                                    <div id="FlightsDiv">
-                                                    <h1>Flight Details:</h1>
-                                                    <div id="id${i}"> ${data[i].id}</div>
+                                                <div id="FlightsDiv">
+                                                <h1>Flight Details:</h1>
+                                                <div id="id${i}"> ${data[i].id}</div>
 
-                                                    <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                        <th> Price </th>
-                                                        <th> Departure </th>
-                                                        <th> Arrival Time </th>
-                                                        <th> Departure City </th>
-                                                        <th> Arrival City </th>
-                                                        <th> Airlines </th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
+                                                <table class="table table-hover">
+                                                <thead>
                                                     <tr>
-                                                    <td id="price${i}"> ${data[i].conversion.EUR} € </td>
-                                                    <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
-                                                    <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
-                                                    <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
-                                                    <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                                                    <td id="airlines${i}"> ${data[i].airlines} </td>
-                                                    </tr>
-                                                    </tbody>
+                                                    <th> Price </th>
+                                                    <th> Departure </th>
+                                                    <th> Arrival Time </th>
+                                                    <th> Departure City </th>
+                                                    <th> Arrival City </th>
+                                                    <th> Airlines </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                                <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                                <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                                <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                                <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                                <td id="airlines${i}"> ${data[i].airlines} </td>
+                                                </tr>
+                                                </tbody>
 
-                                                    </table>`;
+                                                </table>`;
 
                 departuretime = new Date(data[i].dTimeUTC * 1000);
                 arrivaltime = new Date(data[i].aTimeUTC * 1000);
                 str += `<button type="button" id="add${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
                 str += `<button type="button" id="order${i}" onclick="orderNow(${i})">Order Now</button>`;
+                str +=`<h3> ${checkIfDiscount(data[i])}</h3>`;
                 str += ` <div id="orderCard${i}"></div></div>`;
                 document.getElementById('result').innerHTML += str;
             }
@@ -278,7 +327,7 @@
             var str = "";
             str +=
                 `<label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
-                            <input id="${index}fullNameID_Inputabc${counterpass[index]}" type="text" class="form-control" placeholder="Enter your full name" \>
+                        <input id="${index}fullNameID_Inputabc${counterpass[index]}" type="text" class="form-control" placeholder="Enter your full name" \>
 `
             var newDiv = document.createElement("div");
             newDiv.innerHTML = str
@@ -290,38 +339,38 @@
 
             var str = "";
             str += `<div id="editDiv">
-                <div id="showID">ID</div>
-                <form id="orderForm">
-                    <div class="form-group row">
-                        <div class="form-group col-sm-3">
-                            <label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
-                            <input id="fullNameID_Input${index}" type="text" class="form-control" placeholder="Enter your full name" required>
-                        </div>
-
-                        <div class="form-group col-sm-3">
-                            <label for="eMail"><span class="red-star">★ </span>Main Email</label>
-                            <input type="text" class="form-control" id="eMail_input${index}" placeholder="name@name.com" required>
-                        </div>
-
-                        <div class="form-group col-sm-3">
-                            <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
-                            <input type="checkbox" class="form-control" id="acceptTerms${index}"  />
-                        </div>
-                        <div class="from-group col-sm-3">
-                            Add Passenger <input type="button" value="+" onclick="addPassenger(${index})" />
-                           <div id=pass${index}> </div>
-                        </div>
-
+            <div id="showID">ID</div>
+            <form id="orderForm">
+                <div class="form-group row">
+                    <div class="form-group col-sm-3">
+                        <label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
+                        <input id="fullNameID_Input${index}" type="text" class="form-control" placeholder="Enter your full name" required>
                     </div>
 
-                    <div class="form-group row">
-
+                    <div class="form-group col-sm-3">
+                        <label for="eMail"><span class="red-star">★ </span>Main Email</label>
+                        <input type="text" class="form-control" id="eMail_input${index}" placeholder="name@name.com" required>
                     </div>
 
-                    <button onclick="AddToOrdersTable(counterpass[${index}],${index})" type="button" class="btn btn-primary btn-lg" id="AddToOrdersTable_BTN">Order Flight!</button>
-                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
-                </form>
-            </div>`
+                    <div class="form-group col-sm-3">
+                        <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
+                        <input type="checkbox" class="form-control" id="acceptTerms${index}"  />
+                    </div>
+                    <div class="from-group col-sm-3">
+                        Add Passenger <input type="button" value="+" onclick="addPassenger(${index})" />
+                       <div id=pass${index}> </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+
+                </div>
+
+                <button onclick="AddToOrdersTable(counterpass[${index}],${index})" type="button" class="btn btn-primary btn-lg" id="AddToOrdersTable_BTN">Order Flight!</button>
+                <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
+            </form>
+        </div>`
 
             document.getElementById(`orderCard${index}`).innerHTML = str;
 
@@ -448,31 +497,31 @@
             }
             document.getElementById('result').innerHTML = "";
             str = `    <h1>Flight Details:</h1>
-                                                        <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                        <th>#</th>
-                                                        <th> Price </th>
-                                                        <th> Departure </th>
-                                                        <th> Arrival Time </th>
-                                                        <th> Departure City </th>
-                                                        <th> Arrival City </th>
-                                                        <th> Airlines </th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>`;
+                                                    <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                    <th>#</th>
+                                                    <th> Price </th>
+                                                    <th> Departure </th>
+                                                    <th> Arrival Time </th>
+                                                    <th> Departure City </th>
+                                                    <th> Arrival City </th>
+                                                    <th> Airlines </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>`;
             for (var i = 0; i < value.length; i++) {
                 str += `
-                                                    <tr>
-                                                    <td>${i + 1}</td>
-                                                    <td id="price${i}"> ${value[i].price} € </td>
-                                                    <td id="departDate${i}"> ${value[i].departDate} </td>
-                                                    <td id="returnDate${i}"> ${value[i].returnDate} </td>
-                                                    <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
-                                                    <td id="flyTo${i}"> ${value[i].flyTo} </td>
-                                                    <td id="airlines${i}"> ${value[i].airlines} </td>
-                                                    </tr>
-                                                    </tbody>`
+                                                <tr>
+                                                <td>${i + 1}</td>
+                                                <td id="price${i}"> ${value[i].price} € </td>
+                                                <td id="departDate${i}"> ${value[i].departDate} </td>
+                                                <td id="returnDate${i}"> ${value[i].returnDate} </td>
+                                                <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
+                                                <td id="flyTo${i}"> ${value[i].flyTo} </td>
+                                                <td id="airlines${i}"> ${value[i].airlines} </td>
+                                                </tr>
+                                                </tbody>`
             }
             str += `</table>`;
             document.getElementById('result').innerHTML += str;
@@ -537,5 +586,10 @@
             </div>
         </div>
     </div>
+
+
+
+
+
 </body>
 </html>
