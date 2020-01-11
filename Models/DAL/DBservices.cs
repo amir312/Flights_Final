@@ -771,6 +771,55 @@ public class DBservices
 
         return command;
     }
+
+    public int PutDiscount(Discounts d)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        String cStr = BuildPutCommandDiscount(d);      // helper method to build the insert string
+        cmd = CreateCommand(cStr, con);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+    //--------------------------------------------------------------------
+    // 17.  Build PUT Sale Command
+    //--------------------------------------------------------------------
+    private String BuildPutCommandDiscount(Discounts discount)
+    {
+        String command;
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        String prefix = "UPDATE Discounts SET [airline] = '" + discount.Airline + "', [flyfrom] = '" + discount.Flyfrom + "', [flyto] = '" + discount.Flyto + "', [startdate] = '" + discount.Startdate + "', [finishdate] =  '" + discount.Finishdate + "', [discount] =  " + discount.Discount + " WHERE [ID] = " + discount.Id + "";
+        command = prefix;
+        return command;
+    }
 }
 
 
