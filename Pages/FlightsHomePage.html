@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿
+﻿﻿﻿﻿﻿﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +16,7 @@
 
     <!--NEW -Form Animation -  Currently not working on CSS-->
     <style>
+
 
 
 
@@ -220,66 +221,52 @@
             mydata = data;
             console.log(mydata);
             clickfaivoriate = []
+            counterpass = []
             ShowData(data);
         }
-
-
-
-        function checkDiscount(airline,flyfrom,flyto, depart, arrive) {
-           ajaxCall("GET", "../api/Discounts", "", SuccessCheckDiscount, error);
-
-
-
-        }
-
-        function SuccessCheckDiscount(data) {
-
-        }
-
-
 
 
 
         function ShowData(data) {
             document.getElementById('result').innerHTML = "";
             for (var i = 0; i < data.length; i++) {
-                clickfaivoriate[i] = true;
+                clickfaivoriate[i] = true; // check all faivoriate status
+                counterpass[i] = 0; //check who mach passenger order in same time
                 str = '';
                 str = `
-                                            <div id="FlightsDiv">
-                                            <h1>Flight Details:</h1>
-                                            <div id="id${i}"> ${data[i].id}</div>
+                                                <div id="FlightsDiv">
+                                                <h1>Flight Details:</h1>
+                                                <div id="id${i}"> ${data[i].id}</div>
 
-                                            <table class="table table-hover">
-                                            <thead>
+                                                <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                    <th> Price </th>
+                                                    <th> Departure </th>
+                                                    <th> Arrival Time </th>
+                                                    <th> Departure City </th>
+                                                    <th> Arrival City </th>
+                                                    <th> Airlines </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
                                                 <tr>
-                                                <th> Price </th>
-                                                <th> Departure </th>
-                                                <th> Arrival Time </th>
-                                                <th> Departure City </th>
-                                                <th> Arrival City </th>
-                                                <th> Airlines </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                            <td id="price${i}"> ${data[i].conversion.EUR} € </td>
-                                            <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
-                                            <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
-                                            <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
-                                            <td id="cityTo${i}"> ${data[i].cityTo} </td>
-                                            <td id="airlines${i}"> ${data[i].airlines} </td>
-                                            </tr>
-                                            </tbody>
+                                                <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                                <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                                <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                                <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                                <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                                <td id="airlines${i}"> ${data[i].airlines} </td>
+                                                </tr>
+                                                </tbody>
 
-                                            </table>`;
+                                                </table>`;
 
                 departuretime = new Date(data[i].dTimeUTC * 1000);
                 arrivaltime = new Date(data[i].aTimeUTC * 1000);
                 str += `<button type="button" id="add${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
                 str += `<button type="button" id="order${i}" onclick="orderNow(${i})">Order Now</button>`;
-                //str += checkDiscount(`${data[i].airlines}, ${data[i].cityFrom}, ${new Date(data[i].dTimeUTC * 1000)},  ${new Date(data[i].aTimeUTC * 1000)} `);
-                str += `</div>`;
+                str += ` <div id="orderCard${i}"></div></div>`;
                 document.getElementById('result').innerHTML += str;
             }
         }
@@ -289,25 +276,83 @@
             console.log(err);
         }
 
-        function orderNow(index) {
-            $("#frame").hide();
-            $("#editDiv").show();
-            document.getElementById('showID').innerHTML =(mydata[index].id).toString();
-            airline1 = mydata[index].airlines[0];
-            flyfrom1 = mydata[index].cityFrom;
-            flyto1 = mydata[index].cityTo;
+        function addPassenger(index) {
+            if (counterpass[index] == 0) { counterpass[index] = 1; }
+            else { counterpass[index]++; }
+            var str = "";
+            str +=
+                `<label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
+                        <input id="${index}fullNameID_Inputabc${counterpass[index]}" type="text" class="form-control" placeholder="Enter your full name" \>
+`
+            var newDiv = document.createElement("div");
+            newDiv.innerHTML = str
+            document.getElementById(`pass${index}`).appendChild(newDiv);
         }
 
-        function AddToOrdersTable() {
+        function orderNow(index) {
 
-            let id = document.getElementById('showID').innerHTML;
-            let name = $("#fullNameID_Input").val();
-            let mail = $("#eMail_input").val();
 
-            if (document.getElementById("acceptTerms").checked == false) {
+            var str = "";
+            str += `<div id="editDiv">
+            <div id="showID">ID</div>
+            <form id="orderForm">
+                <div class="form-group row">
+                    <div class="form-group col-sm-3">
+                        <label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
+                        <input id="fullNameID_Input${index}" type="text" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="eMail"><span class="red-star">★ </span>Main Email</label>
+                        <input type="text" class="form-control" id="eMail_input${index}" placeholder="name@name.com" required>
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
+                        <input type="checkbox" class="form-control" id="acceptTerms${index}"  />
+                    </div>
+                    <div class="from-group col-sm-3">
+                        Add Passenger <input type="button" value="+" onclick="addPassenger(${index})" />
+                       <div id=pass${index}> </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+
+                </div>
+
+                <button onclick="AddToOrdersTable(counterpass[${index}],${index})" type="button" class="btn btn-primary btn-lg" id="AddToOrdersTable_BTN">Order Flight!</button>
+                <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
+            </form>
+        </div>`
+
+            document.getElementById(`orderCard${index}`).innerHTML = str;
+
+        }
+
+        function AddToOrdersTable(counterindex, index) {
+
+            let id = mydata[index].id;
+            let name = $(`#fullNameID_Input${index}`).val();
+            let mail = $(`#eMail_input${index}`).val();
+            let airline1 = mydata[index].airlines[0];
+            let flyfrom1 = mydata[index].cityFrom;
+            let flyto1 = mydata[index].cityTo;
+            if (counterindex != 0) {
+                for (var i = 0; i < counterindex; i++) {
+                    if ($(`#${index}fullNameID_Inputabc${i + 1}`).val() == "") { alert("please insert valid Name"); return 0; }
+                    name += " ," + $(`#${index}fullNameID_Inputabc${i + 1}`).val();
+
+                }
+            }
+
+            if (document.getElementById(`acceptTerms${index}`).checked == false) {
                 alert("Please Accept Terms Before Ordering Flights");
                 return 0;
             }
+            if (name == "") { alert("please insert valid Name"); return 0; }
+            if (mail == "") { alert("please insert valid Email"); return 0; }
 
 
             OrderdFlight = {
@@ -407,44 +452,35 @@
             }
             document.getElementById('result').innerHTML = "";
             str = `    <h1>Flight Details:</h1>
-                                                <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                <th>#</th>
-                                                <th> Price </th>
-                                                <th> Departure </th>
-                                                <th> Arrival Time </th>
-                                                <th> Departure City </th>
-                                                <th> Arrival City </th>
-                                                <th> Airlines </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>`;
+                                                    <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                    <th>#</th>
+                                                    <th> Price </th>
+                                                    <th> Departure </th>
+                                                    <th> Arrival Time </th>
+                                                    <th> Departure City </th>
+                                                    <th> Arrival City </th>
+                                                    <th> Airlines </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>`;
             for (var i = 0; i < value.length; i++) {
                 str += `
-                                            <tr>
-                                            <td>${i + 1}</td>
-                                            <td id="price${i}"> ${value[i].price} € </td>
-                                            <td id="departDate${i}"> ${value[i].departDate} </td>
-                                            <td id="returnDate${i}"> ${value[i].returnDate} </td>
-                                            <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
-                                            <td id="flyTo${i}"> ${value[i].flyTo} </td>
-                                            <td id="airlines${i}"> ${value[i].airlines} </td>
-                                            </tr>
-                                            </tbody>`
+                                                <tr>
+                                                <td>${i + 1}</td>
+                                                <td id="price${i}"> ${value[i].price} € </td>
+                                                <td id="departDate${i}"> ${value[i].departDate} </td>
+                                                <td id="returnDate${i}"> ${value[i].returnDate} </td>
+                                                <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
+                                                <td id="flyTo${i}"> ${value[i].flyTo} </td>
+                                                <td id="airlines${i}"> ${value[i].airlines} </td>
+                                                </tr>
+                                                </tbody>`
             }
             str += `</table>`;
             document.getElementById('result').innerHTML += str;
         }
-
-
-
-
-
-
-
-
-
 
     </script>
 </head>
@@ -509,34 +545,6 @@
 
 
 
-    <div id="editDiv">
-        <div id="showID">ID</div>
-        <form id="orderForm">
-            <div class="form-group row">
-                <div class="form-group col-sm-3">
-                    <label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
-                    <input id="fullNameID_Input" type="text" class="form-control" placeholder="Enter your full name" required>
-                </div>
 
-                <div class="form-group col-sm-3">
-                    <label for="eMail"><span class="red-star">★ </span>Main Email</label>
-                    <input type="text" class="form-control" id="eMail_input" placeholder="name@name.com" required>
-                </div>
-
-                <div class="form-group col-sm-3">
-                    <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
-                    <input type="checkbox" class="form-control" id="acceptTerms" checked />
-                </div>
-
-            </div>
-
-            <div class="form-group row">
-
-            </div>
-
-            <button onclick="AddToOrdersTable()" type="button" class="btn btn-primary btn-lg" id="AddToOrdersTable_BTN">Order Flight!</button>
-            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
-        </form>
-    </div>
 </body>
 </html>
