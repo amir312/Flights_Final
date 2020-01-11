@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 
-    <!--<link href="FlightHomePage_CSS.css" rel="stylesheet" />-->
     <script src="../Scripts/AJAXcall.js"></script>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
@@ -66,15 +65,6 @@
                 $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
                 populateFields(this.getAttribute('data-ID')); // fill the form fields according to the selected row
             });
-
-            //$(document).on("click", ".viewBtn", function () {
-            //    mode = "view";
-            //    markSelected(this);
-            //    $("#editDiv").show();
-            //    row.className = 'selected';
-            //    $("#editDiv :input").attr("disabled", "disabled"); // view mode: disable all controls in the form
-            //    populateFields(this.getAttribute('data-carId'));
-            //});
 
             $(document).on("click", ".deleteBtn", function () {
                 mode = "delete";
@@ -222,10 +212,9 @@
                             render: function (data, type, row, meta) {
                                 let discountsdata = "data-ID='" + row.Id + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + discountsdata + "> Edit </button>";
-                                //viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + discountsdata + "> View </button>";
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + discountsdata + "> Edit </button>";                             
                                 deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + discountsdata + "> Delete </button>";
-                                return editBtn /*+ viewBtn*/ + deleteBtn;
+                                return editBtn + deleteBtn;
                             }
                         },
                         { data: "Id" },
@@ -259,7 +248,7 @@
         <a class="active" href="FlightsHomePage.html">Log Out</a>
         <a href="FavoritesForManager.html">All Favorites Flights</a>
         <a href="OrdersForManager.html">All Ordered Flights</a>
-        <a href="DiscountInterface.html">Discounts Interface</a>
+        <a href="DiscountInterface.html">Discounts</a>
     </div>
 
     <nav class="navbar navbar-default">
