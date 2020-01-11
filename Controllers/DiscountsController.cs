@@ -35,10 +35,11 @@ namespace HW3.Controllers
 
 
         // POST api/<controller>
-        public void Post([FromBody] Models.OrderdFlight oflt1)
+        public List<Discounts> Post(Discounts discount1)
         {
-            oflt1.insertOrderdFlight();
-
+            Discounts discount = new Discounts();
+            discount1.InsertDiscount();
+            return discount.getdiscounts();
         }
 
         // PUT api/<controller>/5
