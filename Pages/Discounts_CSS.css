@@ -1,0 +1,41 @@
+﻿body {
+}
+
+button {
+    margin-left: 10px;
+}
+
+.colorDiv {
+    height: 30px;
+    width: 70px;
+    border: 2px solid black
+}
+
+#newBTN {
+    background-color: blueviolet;
+    margin-bottom: 10px;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .topnav a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
