@@ -225,6 +225,21 @@
 
 
 
+        function checkDiscount(airline,flyfrom,flyto, depart, arrive) {
+           ajaxCall("GET", "../api/Discounts", "", SuccessCheckDiscount, error);
+
+
+
+        }
+
+        function SuccessCheckDiscount(data) {
+
+        }
+
+
+
+
+
         function ShowData(data) {
             document.getElementById('result').innerHTML = "";
             for (var i = 0; i < data.length; i++) {
@@ -263,6 +278,7 @@
                 arrivaltime = new Date(data[i].aTimeUTC * 1000);
                 str += `<button type="button" id="add${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
                 str += `<button type="button" id="order${i}" onclick="orderNow(${i})">Order Now</button>`;
+                //str += checkDiscount(`${data[i].airlines}, ${data[i].cityFrom}, ${new Date(data[i].dTimeUTC * 1000)},  ${new Date(data[i].aTimeUTC * 1000)} `);
                 str += `</div>`;
                 document.getElementById('result').innerHTML += str;
             }
@@ -276,7 +292,7 @@
         function orderNow(index) {
             $("#frame").hide();
             $("#editDiv").show();
-            document.getElementById('showID').innerHTML = "Flight ID: " + (mydata[index].id).toString();
+            document.getElementById('showID').innerHTML =(mydata[index].id).toString();
             airline1 = mydata[index].airlines[0];
             flyfrom1 = mydata[index].cityFrom;
             flyto1 = mydata[index].cityTo;
@@ -303,7 +319,7 @@
                 flyTo: flyto1
             };
             console.log(OrderdFlight);
-            ajaxCall("POST", "../api/OrderFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
+            ajaxCall("POST", "../api/OrderdFlight", JSON.stringify(OrderdFlight), postORDERSuccess, postORDERError);
         }
 
         function postORDERSuccess(data) {
@@ -420,6 +436,15 @@
             str += `</table>`;
             document.getElementById('result').innerHTML += str;
         }
+
+
+
+
+
+
+
+
+
 
     </script>
 </head>
