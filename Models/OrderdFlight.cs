@@ -30,7 +30,7 @@ namespace HW3.Models
             this.flyto = flyto;
         }
 
-     
+
         public string FlightID { get => flightID; set => flightID = value; }
         public string FullName { get => fullName; set => fullName = value; }
         public string Email { get => email; set => email = value; }
@@ -47,19 +47,14 @@ namespace HW3.Models
 
 
 
-        public  List<OrderdFlight> getOrderdflights()
+        public List<OrderdFlight> getOrderdflights()
         {
             List<OrderdFlight> orderd_List = new List<OrderdFlight>();
 
             DBservices dbs = new DBservices();
             orderd_List = dbs.getOrderdflightsDB();
-     
+
             return orderd_List;
-
-
-
         }
-
-
     }
 }
