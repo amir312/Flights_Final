@@ -281,7 +281,7 @@
         var str = "";
         str +=
             `<label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
-                    <input id="fullNameID_Input${counterpass[index]}" type="text" class="form-control" placeholder="Enter your full name" \>
+                    <input id="${index}fullNameID_Inputabc${counterpass[index]}" type="text" class="form-control" placeholder="Enter your full name" \>
 `
              var newDiv = document.createElement("div");
              newDiv.innerHTML=str
@@ -298,17 +298,17 @@
             <div class="form-group row">
                 <div class="form-group col-sm-3">
                     <label for="fullName" id="fullNameID"><span class="red-star">★ </span>Full Name</label>
-                    <input id="fullNameID_Input" type="text" class="form-control" placeholder="Enter your full name" required>
+                    <input id="fullNameID_Input${index}" type="text" class="form-control" placeholder="Enter your full name" required>
                 </div>
 
                 <div class="form-group col-sm-3">
                     <label for="eMail"><span class="red-star">★ </span>Main Email</label>
-                    <input type="text" class="form-control" id="eMail_input" placeholder="name@name.com" required>
+                    <input type="text" class="form-control" id="eMail_input${index}" placeholder="name@name.com" required>
                 </div>
 
                 <div class="form-group col-sm-3">
                     <label for="acceptTerms"><span class="red-star">★ </span>Accept Terms</label>
-                    <input type="checkbox" class="form-control" id="acceptTerms"  />
+                    <input type="checkbox" class="form-control" id="acceptTerms${index}"  />
                 </div>
                 <div class="from-group col-sm-3">
                     Add Passenger <input type="button" value="+" onclick="addPassenger(${index})" />
@@ -333,19 +333,20 @@
         function AddToOrdersTable(counterindex,index) {
 
             let id = mydata[index].id;
-            let name = $("#fullNameID_Input").val();
-            let mail = $("#eMail_input").val();
+            let name = $(`#fullNameID_Input${index}`).val();
+            let mail = $(`#eMail_input${index}`).val();
             let  airline1 = mydata[index].airlines[0];
             let flyfrom1 = mydata[index].cityFrom;
             let flyto1 = mydata[index].cityTo;
             if (counterindex!=0){
                 for (var i = 0; i < counterindex; i++) {
-            if ($(`#fullNameID_Input${i+1}`).val() == "") { alert("please insert valid Name"); return 0; }
-
-                name += " ,"+ $(`#fullNameID_Input${i+1}`).val();
+                     if ($(`#${index}fullNameID_Inputabc${i+1}`).val() == "") { alert("please insert valid Name"); return 0; }
+                name += " ,"+ $(`#${index}fullNameID_Inputabc${i+1}`).val();
                 
-            }}
-            if (document.getElementById("acceptTerms").checked == false) {
+                }
+            }
+
+            if (document.getElementById(`acceptTerms${index}`).checked == false) {
                 alert("Please Accept Terms Before Ordering Flights");
                 return 0;
             }
